@@ -66,10 +66,41 @@ python3 tools/compare.py                          # figuras y números de valida
 Las variables de entorno de OpenFOAM que necesita el paquete Debian están en
 `tools/run_case.sh` (`FOAM_ETC`, `WM_PROJECT_DIR`, ... y `LD_LIBRARY_PATH=/opt/oa2is-openfoam-patches/lib`).
 
-## Resultados
+## Resultados (resumen)
 
-Ver [`docs/VALIDACION.md`](docs/VALIDACION.md) (tabla de corridas, conservación, sensibilidad,
-detenido vs en movimiento, respuesta a inclinación y frenado) y los videos `results/*/animation.mp4`.
+7 corridas reales (5 escenarios en la malla `ib_test`, 146 k celdas; sensibilidad de malla con
+`ib_mid`, 477 k; sensibilidad de paso de tiempo con Co_max 0,5). Detalle y figuras en
+[`docs/VALIDACION.md`](docs/VALIDACION.md).
+
+| | Resultado |
+|---|---|
+| Conservación del aceite | deriva ≤ 1,6 × 10⁻⁴ % en todas las corridas (95 L y 55 L) |
+| Cuerpos en su pose dentro de la solución | error ≤ 6,7 mm (celda 12–18 mm), también con ω(t) variable |
+| Detenido vs en movimiento | velocidad media del aceite 0,007 → 0,74 m/s; 7 % del aceite lanzado sobre el eje; S1 mojado 100 % → 53 % |
+| Malla 146 k → 477 k / Δt Co 1 → 0,5 | magnitudes globales cambian ≤ 4 % / ≤ 2 % (salvo aceite sobre el eje, 4–10 %) |
+| Pendiente 10 % + peralte 4° | pozo de aceite girado −5,2° (cuasi-estático −5,7°), S5 seco / S6 mojado |
+| Frenado −3 m/s² | pozo de aceite gira hacia adelante (+4,7° en 0,25 s, hacia +17° cuasi-estático) |
+| 55 L | S5/S6 secos, estados ALERTA; mojado de engranajes cae a la mitad |
+| Limitación principal | dientes con 1,5–2 celdas: flujo dentro del engrane no resuelto; 1,7–4,3 L quedan en celdas de cuerpos |
+
+Por caso en `results/<caso>/`: `sensors.csv|parquet` (S1–S8 cada paso: α, presencia, U, p, p_rgh),
+`system_state.csv|parquet`, `inventory.csv`, `log_history.csv` (Δt, Courant, residuos),
+`field_metrics.csv`, `plots/`, `animation.mp4` (cortes) y, para 02, 04 y la malla media,
+`animation_3d.mp4`.
+
+## Publicar en GitHub
+
+Esta sesión no tiene permiso de escritura en GitHub (el repositorio remoto
+`joseroavargas409/OA2IS-WheelMotor-CFD` no existe y no se pudo crear). Para publicarlo desde el
+paquete entregado (`OA2IS-WheelMotor-CFD.bundle` contiene todo el historial):
+
+```bash
+git clone OA2IS-WheelMotor-CFD.bundle OA2IS-WheelMotor-CFD
+cd OA2IS-WheelMotor-CFD
+gh repo create joseroavargas409/OA2IS-WheelMotor-CFD --public --source . --push
+# o: crear el repo vacío en github.com y luego
+# git remote add origin https://github.com/joseroavargas409/OA2IS-WheelMotor-CFD.git && git push -u origin main
+```
 
 ## Repositorios originales
 

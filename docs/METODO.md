@@ -79,7 +79,8 @@ ecuación de presión es singular). Se escribe directamente en formato `polyMesh
 | Preset | celdas | tamaño en zona móvil | uso |
 |---|---|---|---|
 | `ib_test` | 145 934 | 18 mm, capas 25 mm | 5 escenarios + sensibilidad Δt |
-| `ib_coarse` | 824 852 | 9 mm, capas 13 mm | sensibilidad de malla (nominal) |
+| `ib_mid` | 477 386 | 12 mm, capas 18 mm | sensibilidad de malla (nominal) |
+| `ib_coarse` | 824 852 | 9 mm, capas 13 mm | generada y probada; corrida descartada por costo (~7 h) |
 | `ib_medium` / `ib_fine` | ~3 M / ~8 M (estimado) | 6 / 4 mm | definidos, no corridos (costo) |
 
 ## 6. Por qué frontera inmersa (alternativas investigadas)

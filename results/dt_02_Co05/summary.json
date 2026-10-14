@@ -1,0 +1,49 @@
+{
+ "case": "/home/claude/runs/prod/dt_02_Co05",
+ "scenario": "02_operacion_normal",
+ "mechanisms": "moving",
+ "oil_litres_target": 95.0,
+ "cells": 145934,
+ "t_end": 0.15,
+ "steps": 1286,
+ "wall_s": 2297.79,
+ "dt_mean": 0.00011664074652954897,
+ "Co_max": 1.2877894,
+ "Co_p95": 0.5379883175,
+ "p_rgh_res_final_max": 9.9999893e-08,
+ "oil_L_initial": 95.0,
+ "oil_L_final": 95.0001504,
+ "oil_drift_max_pct": 0.00015831578946888744,
+ "states": {
+  "NORMAL": 1286
+ },
+ "final_metrics": {
+  "t": 0.15,
+  "oil_L": 95.00015288290905,
+  "oil_excess_in_bodies_L": 2.8150216844822866,
+  "fluid_L": 425.1091008645013,
+  "oil_centroid_x": -0.020468854273561213,
+  "oil_centroid_y": -0.31890268979925823,
+  "oil_centroid_z": -1.4039476734453742,
+  "oil_above_axis_frac": 0.03346638289459257,
+  "wetted_gear_frac": 0.15748292028050007,
+  "oil_L_stageHigh": 7.606715605231068,
+  "wetted_frac_stageHigh": 0.0929653231442801,
+  "oil_L_stageLow": 9.78655288436693,
+  "wetted_frac_stageLow": 0.21983167385203445,
+  "oil_L_cover_pocket": 24.107709590688536,
+  "oil_mean_speed": 0.7672425930255481,
+  "oil_kinetic_J": 123.57111649225729,
+  "max_speed_fluid": 32.80500793457031
+ },
+ "sensor_alpha_mean_last_half": {
+  "S1": 0.7512587834744707,
+  "S2": 0.9844969858530511,
+  "S3": 1.0,
+  "S4": 6.168136117813161e-05,
+  "S5": 0.999999999501868,
+  "S6": 0.9643582795392279,
+  "S7": 1.0,
+  "S8": -1.9811942162339065e-93
+ }
+}

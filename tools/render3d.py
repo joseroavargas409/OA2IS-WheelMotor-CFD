@@ -67,7 +67,7 @@ def main():
     for k, t in enumerate(F.times[::a.every]):
         frame(F, t, str(out / f'frame_{k:04d}.png'), sc, env, fixed)
     if a.mp4:
-        make_mp4(out, out.parent / f'{out.name}.mp4', fps=8)
+        make_mp4(out, out.parent / 'animation_3d.mp4', fps=8)
 
 
 if __name__ == '__main__':

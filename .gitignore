@@ -7,3 +7,4 @@ cases/*/
 !cases/README.md
 *.foam
 processor*/
+results/*/frames3d/

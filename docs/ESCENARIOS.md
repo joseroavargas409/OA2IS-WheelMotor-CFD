@@ -13,17 +13,17 @@ no se usa en las estadísticas.
 
 | Escenario | Entrada | Motor | Cargas | Duración |
 |---|---|---|---|---|
-| `01_reposo` | mecanismos detenidos | 0 rpm | g | 0,3 s |
-| `02_operacion_normal` | camión a 20 km/h constante | 887 rpm (rueda 27,2 rpm) | g | 0,4 s |
-| `03_operacion_inclinada` | 20 km/h subiendo pendiente 10 % (5,71°) con peralte 4° | 887 rpm | g girada | 0,4 s |
-| `04_transitorio` | 20 km/h; +1,5 m/s² entre 0,10–0,25 s; −3,0 m/s² entre 0,25–0,60 s | 887 → 923 → 755 rpm (de v(t)) | g − a(t) | 0,6 s |
-| `05_bajo_inventario` | como 02 con 55 L | 887 rpm | g | 0,4 s |
+| `01_reposo` | mecanismos detenidos | 0 rpm | g | 0,25 s |
+| `02_operacion_normal` | camión a 20 km/h constante | 887 rpm (rueda 27,2 rpm) | g | 0,25 s |
+| `03_operacion_inclinada` | 20 km/h subiendo pendiente 10 % (5,71°) con peralte 4° | 887 rpm | g girada | 0,25 s |
+| `04_transitorio` | 20 km/h; +1,5 m/s² entre 0,08–0,15 s; −3,0 m/s² entre 0,15–0,40 s | 887 → 904 → 784 rpm (de v(t)) | g − a(t) | 0,40 s |
+| `05_bajo_inventario` | como 02 con 55 L | 887 rpm | g | 0,25 s |
 
 Comparación «mecanismos detenidos vs en movimiento»: `01_reposo` frente a `02_operacion_normal`
 (mismo aceite, misma malla).
 
 Por qué 20 km/h: es una velocidad típica de un camión cargado en rampa de mina y mantiene el costo
-del caso nominal en ~30 min por escenario en la malla de prueba. A velocidad máxima (~64 km/h,
+del caso nominal en ~1 h por escenario en la malla de prueba (2 núcleos compartidos). A velocidad máxima (~64 km/h,
 ≈ 2 840 rpm) el paso de tiempo baja ~3 veces; el flujo de trabajo es el mismo
 (`motor_rpm` en el YAML).
 
