@@ -88,18 +88,10 @@ Por caso en `results/<caso>/`: `sensors.csv|parquet` (S1–S8 cada paso: α, pre
 `field_metrics.csv`, `plots/`, `animation.mp4` (cortes) y, para 02, 04 y la malla media,
 `animation_3d.mp4`.
 
-## Publicar en GitHub
-
-Esta sesión no tiene permiso de escritura en GitHub (el repositorio remoto
-`joseroavargas409/OA2IS-WheelMotor-CFD` no existe y no se pudo crear). Para publicarlo desde el
-paquete entregado (`OA2IS-WheelMotor-CFD.bundle` contiene todo el historial):
+## Obtener el código
 
 ```bash
-git clone OA2IS-WheelMotor-CFD.bundle OA2IS-WheelMotor-CFD
-cd OA2IS-WheelMotor-CFD
-gh repo create joseroavargas409/OA2IS-WheelMotor-CFD --public --source . --push
-# o: crear el repo vacío en github.com y luego
-# git remote add origin https://github.com/joseroavargas409/OA2IS-WheelMotor-CFD.git && git push -u origin main
+git clone https://github.com/joseroavargas409/OA2IS-WheelMotor-CFD.git
 ```
 
 ## Repositorios originales
