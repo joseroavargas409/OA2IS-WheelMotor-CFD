@@ -1,0 +1,10 @@
+# Virtual OA2IS probes, model frame (m). All sit 5-10 mm off STATIONARY walls
+# (spindle plate/tube, ring bodies), where a real probe could be mounted.
+- {id: S1, name: "Fondo etapa alta, cara de placa spindle", position: [0.0, -0.400, -1.025]}
+- {id: S2, name: "Fondo entre etapas", position: [0.0, -0.400, -1.300]}
+- {id: S3, name: "Fondo bolsillo exterior (tapa)", position: [0.0, -0.450, -1.680]}
+- {id: S4, name: "Superior etapa alta (aire esperado)", position: [0.0, 0.400, -1.025]}
+- {id: S5, name: "Lateral delantero entre etapas", position: [0.400, -0.250, -1.300]}
+- {id: S6, name: "Lateral trasero entre etapas", position: [-0.400, -0.250, -1.300]}
+- {id: S7, name: "Anillo corona alta / tubo spindle, fondo", position: [0.0, -0.500, -1.130]}
+- {id: S8, name: "Parte superior bolsillo exterior (tapa, aire esperado)", position: [0.0, 0.450, -1.680]}

@@ -1,0 +1,102 @@
+diff -ruN a/src/OpenFOAM/containers/Lists/List/ListLoopM.H b/src/OpenFOAM/containers/Lists/List/ListLoopM.H
+--- a/src/OpenFOAM/containers/Lists/List/ListLoopM.H	2026-10-14 00:59:32.299203468 -0300
++++ b/src/OpenFOAM/containers/Lists/List/ListLoopM.H	2026-10-14 00:59:32.354871881 -0300
+@@ -37,11 +37,11 @@
+ 
+ // Initial non-const access to list
+ #define List_ACCESS(type, f, fp)                \
+-    type* const __restrict__ fp = (f).begin()
++    type* const fp = (f).begin()  /* OA2IS: __restrict__ removed (GCC>=13 aliasing miscompile) */
+ 
+ // Initial const access to list
+ #define List_CONST_ACCESS(type, f, fp)          \
+-    const type* const __restrict__ fp = (f).begin()
++    const type* const fp = (f).begin()  /* OA2IS: __restrict__ removed (GCC>=13 aliasing miscompile) */
+ 
+ #define List_FOR_ALL(f, i)                      \
+         const label _n##i = (f).size();         \
+diff -ruN a/src/OpenFOAM/containers/Lists/UList/UList.H b/src/OpenFOAM/containers/Lists/UList/UList.H
+--- a/src/OpenFOAM/containers/Lists/UList/UList.H	2026-10-14 00:59:32.303097688 -0300
++++ b/src/OpenFOAM/containers/Lists/UList/UList.H	2026-10-14 00:59:32.371068373 -0300
+@@ -93,7 +93,7 @@
+         label size_;
+ 
+         //- Vector of values of type T
+-        T* __restrict__ v_;
++        T* v_;
+ 
+ 
+ protected:
+@@ -220,7 +220,7 @@
+         inline constexpr UList() noexcept;
+ 
+         //- Construct from components
+-        inline UList(T* __restrict__ v, label size) noexcept;
++        inline UList(T* v, label size) noexcept;
+ 
+ 
+     // Member Functions
+diff -ruN a/src/OpenFOAM/containers/Lists/UList/UListI.H b/src/OpenFOAM/containers/Lists/UList/UListI.H
+--- a/src/OpenFOAM/containers/Lists/UList/UListI.H	2026-10-14 00:59:32.311162276 -0300
++++ b/src/OpenFOAM/containers/Lists/UList/UListI.H	2026-10-14 00:59:32.386996603 -0300
+@@ -41,7 +41,7 @@
+ 
+ 
+ template<class T>
+-inline Foam::UList<T>::UList(T* __restrict__ v, label size) noexcept
++inline Foam::UList<T>::UList(T* v, label size) noexcept
+ :
+     size_(size),
+     v_(v)
+diff -ruN a/src/OpenFOAM/fields/Fields/symmTensorField/symmTensorField.C b/src/OpenFOAM/fields/Fields/symmTensorField/symmTensorField.C
+--- a/src/OpenFOAM/fields/Fields/symmTensorField/symmTensorField.C	2026-10-14 00:59:32.327194222 -0300
++++ b/src/OpenFOAM/fields/Fields/symmTensorField/symmTensorField.C	2026-10-14 00:59:32.426914037 -0300
+@@ -53,6 +53,16 @@
+ 
+ void inv(Field<symmTensor>& tf, const UList<symmTensor>& tf1)
+ {
++    // OA2IS fix: TFOR_* loops use __restrict__ pointers; when called in place
++    // (tmp reuse, tf and tf1 share storage) GCC >= 13 -O3 produces wrong
++    // inverses (off-diagonal tensors). Work on a copy when aliased.
++    if (!tf.empty() && static_cast<const void*>(tf.cdata()) == static_cast<const void*>(tf1.cdata()))
++    {
++        const Field<symmTensor> tf1Copy(tf1);
++        inv(tf, tf1Copy);
++        return;
++    }
++
+     if (tf.empty())
+     {
+         return;
+diff -ruN a/src/OpenFOAM/fields/Fields/tensorField/tensorField.C b/src/OpenFOAM/fields/Fields/tensorField/tensorField.C
+--- a/src/OpenFOAM/fields/Fields/tensorField/tensorField.C	2026-10-14 00:59:32.323075842 -0300
++++ b/src/OpenFOAM/fields/Fields/tensorField/tensorField.C	2026-10-14 00:59:32.407009875 -0300
+@@ -52,6 +52,16 @@
+ 
+ void inv(Field<tensor>& tf, const UList<tensor>& tf1)
+ {
++    // OA2IS fix: TFOR_* loops use __restrict__ pointers; when called in place
++    // (tmp reuse, tf and tf1 share storage) GCC >= 13 -O3 produces wrong
++    // inverses (off-diagonal tensors). Work on a copy when aliased.
++    if (!tf.empty() && static_cast<const void*>(tf.cdata()) == static_cast<const void*>(tf1.cdata()))
++    {
++        const Field<tensor> tf1Copy(tf1);
++        inv(tf, tf1Copy);
++        return;
++    }
++
+     if (tf.empty())
+     {
+         return;
+diff -ruN a/src/OpenFOAM/matrices/Matrix/Matrix.H b/src/OpenFOAM/matrices/Matrix/Matrix.H
+--- a/src/OpenFOAM/matrices/Matrix/Matrix.H	2026-10-14 00:59:32.319207139 -0300
++++ b/src/OpenFOAM/matrices/Matrix/Matrix.H	2026-10-14 00:59:32.398932111 -0300
+@@ -80,7 +80,7 @@
+         label mRows_, nCols_;
+ 
+         //- Vector of values of type Type
+-        Type* __restrict__ v_;
++        Type* v_;
+ 
+ 
+     // Private Member Functions

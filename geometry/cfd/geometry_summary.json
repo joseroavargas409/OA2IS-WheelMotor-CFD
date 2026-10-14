@@ -1,0 +1,425 @@
+{
+ "units": "m",
+ "frame": "model frame: z = wheel axis (inboard +), y up; rest pose t = 0",
+ "cavity": {
+  "z_cover": -1.7345,
+  "z_closure": -0.8925,
+  "r_hub": 0.536
+ },
+ "fluid_volume_geometric_L": 493.080102406491,
+ "repairs": [
+  "Gear teeth regenerated as exact involutes with backlash (original interpenetrates: mirrored ring profile, zero backlash).",
+  "Spindle ring support at low stage outboard (v2 ring(spindle,.526,.5,.018) at -1.557) trimmed to [-1.559,-1.548]: original overlaps the rotating low-carrier ring at [-1.566,-1.561].",
+  "Thrust rings at -1.22 (v2 thrust: ring(.099,.062,.007,.516), ring(.110,.061,.016,.52)) omitted: the original keeps them static while they intersect the rotating high carrier plate and intermediate flange.",
+  "Interior of the intermediate sleeve (r<.049) and of the shaft/spindle bores treated as closed (sealed) volumes.",
+  "Radii closer than ~1-3 mm snapped for meshability: spindle tube outer .532->.536 (closes the 4 mm tube/hub gap), low ring outer .507->.510, side rings .482/.466->.483/.467 and .499->.500, plate/short tube .484/.468->.483/.467, spindle collar .281->.280, intermediate .061->.059.",
+  "Oil cavity closed at the hub cover inner face (z=-1.7345) and at the outboard face of the hub-bearing seat (z=-0.8925); regions beyond belong to the thrust cap and hub-bearing cavity."
+ ],
+ "parts": {
+  "cavity_envelope": {
+   "triangles": 720,
+   "bbox": [
+    [
+     -0.536,
+     -0.536,
+     -1.7345
+    ],
+    [
+     0.536,
+     0.536,
+     -0.8925
+    ]
+   ],
+   "notes": []
+  },
+  "moving_carrierHigh": {
+   "triangles": 11608,
+   "bbox": [
+    [
+     -0.384,
+     -0.384,
+     -1.267
+    ],
+    [
+     0.384,
+     0.384,
+     -1.024
+    ]
+   ],
+   "notes": [
+    "intermediate sleeve (same speed); flange r.081 and bore r.049 lie inside the hub ring / sleeve",
+    "v2 pin cylinder(.023,.023,.221)",
+    "v2 pin head cylinder(.034,.034,.016,6)",
+    "v2 ring(carrierP,.086,.049,.035,-.087) + struts",
+    "v2 ring(carrierP,.384,.082,.025,+-.087,holes)"
+   ]
+  },
+  "moving_carrierLow": {
+   "triangles": 15676,
+   "bbox": [
+    [
+     -0.41,
+     -0.41,
+     -1.615
+    ],
+    [
+     0.41,
+     0.41,
+     -1.3795
+    ]
+   ],
+   "notes": [
+    "v2 carrier ring .381-.536 (inner part)",
+    "v2 pin cylinder(.023,.023,.221)",
+    "v2 pin head cylinder(.034,.034,.016,6)",
+    "v2 ring(carrierP,.384,.082,.025,+-.087,holes)"
+   ]
+  },
+  "moving_planetHigh0": {
+   "triangles": 3788,
+   "bbox": [
+    [
+     0.0944,
+     -0.171,
+     -1.195
+    ],
+    [
+     0.436,
+     0.171,
+     -1.065
+    ]
+   ],
+   "notes": [
+    "v2 gearGeometry(np,planetR,.102,.036) regenerated",
+    "v2 thrust washers ring(.044,.036,.014,+-.06) + pin: solid core r<=.044"
+   ]
+  },
+  "moving_planetHigh1": {
+   "triangles": 3788,
+   "bbox": [
+    [
+     -0.304,
+     0.059,
+     -1.195
+    ],
+    [
+     0.0376,
+     0.4011,
+     -1.065
+    ]
+   ],
+   "notes": [
+    "v2 gearGeometry(np,planetR,.102,.036) regenerated",
+    "v2 thrust washers ring(.044,.036,.014,+-.06) + pin: solid core r<=.044"
+   ]
+  },
+  "moving_planetHigh2": {
+   "triangles": 3788,
+   "bbox": [
+    [
+     -0.304,
+     -0.4011,
+     -1.195
+    ],
+    [
+     0.0376,
+     -0.059,
+     -1.065
+    ]
+   ],
+   "notes": [
+    "v2 gearGeometry(np,planetR,.102,.036) regenerated",
+    "v2 thrust washers ring(.044,.036,.014,+-.06) + pin: solid core r<=.044"
+   ]
+  },
+  "moving_planetLow0": {
+   "triangles": 6372,
+   "bbox": [
+    [
+     0.0733,
+     -0.1877,
+     -1.555
+    ],
+    [
+     0.4487,
+     0.1877,
+     -1.425
+    ]
+   ],
+   "notes": [
+    "v2 gearGeometry(np,planetR,.102,.036) regenerated",
+    "v2 thrust washers ring(.044,.036,.014,+-.06) + pin: solid core r<=.044"
+   ]
+  },
+  "moving_planetLow1": {
+   "triangles": 6372,
+   "bbox": [
+    [
+     -0.3182,
+     0.0384,
+     -1.555
+    ],
+    [
+     0.0572,
+     0.4138,
+     -1.425
+    ]
+   ],
+   "notes": [
+    "v2 gearGeometry(np,planetR,.102,.036) regenerated",
+    "v2 thrust washers ring(.044,.036,.014,+-.06) + pin: solid core r<=.044"
+   ]
+  },
+  "moving_planetLow2": {
+   "triangles": 6372,
+   "bbox": [
+    [
+     -0.3182,
+     -0.4138,
+     -1.555
+    ],
+    [
+     0.0572,
+     -0.0384,
+     -1.425
+    ]
+   ],
+   "notes": [
+    "v2 gearGeometry(np,planetR,.102,.036) regenerated",
+    "v2 thrust washers ring(.044,.036,.014,+-.06) + pin: solid core r<=.044"
+   ]
+  },
+  "moving_sunHigh": {
+   "triangles": 2444,
+   "bbox": [
+    [
+     -0.1167,
+     -0.1181,
+     -1.195
+    ],
+    [
+     0.1167,
+     0.1181,
+     -1.065
+    ]
+   ],
+   "notes": [
+    "shaft (high) / intermediate (low) inside the sun bore, same speed",
+    "v2 gearGeometry(ns,sunR,.102,bore) regenerated"
+   ]
+  },
+  "moving_sunLow": {
+   "triangles": 3124,
+   "bbox": [
+    [
+     -0.0864,
+     -0.0869,
+     -1.555
+    ],
+    [
+     0.087,
+     0.0869,
+     -1.425
+    ]
+   ],
+   "notes": [
+    "shaft (high) / intermediate (low) inside the sun bore, same speed",
+    "v2 gearGeometry(ns,sunR,.102,bore) regenerated"
+   ]
+  },
+  "static_ringHigh": {
+   "triangles": 10928,
+   "bbox": [
+    [
+     -0.4558,
+     -0.4558,
+     -1.189
+    ],
+    [
+     0.4558,
+     0.4558,
+     -1.071
+    ]
+   ],
+   "notes": [
+    "v2 internal gear regenerated involute"
+   ]
+  },
+  "static_ringLow": {
+   "triangles": 17160,
+   "bbox": [
+    [
+     -0.4667,
+     -0.4667,
+     -1.549
+    ],
+    [
+     0.4667,
+     0.4667,
+     -1.431
+    ]
+   ],
+   "notes": [
+    "v2 internal gear regenerated involute"
+   ]
+  },
+  "wall_carrierLowRing": {
+   "triangles": 5828,
+   "bbox": [
+    [
+     -0.546,
+     -0.546,
+     -1.593
+    ],
+    [
+     0.546,
+     0.546,
+     -1.561
+    ]
+   ],
+   "notes": [
+    "v2 ring(carrierP,.536,.381,.032,-.087) low stage"
+   ]
+  },
+  "wall_hubWall": {
+   "triangles": 6676,
+   "bbox": [
+    [
+     -0.546,
+     -0.546,
+     -1.7445
+    ],
+    [
+     0.546,
+     0.546,
+     -1.699
+    ]
+   ],
+   "notes": [
+    "v2 hub flange ring(.600,.516,.042,-.995)"
+   ]
+  },
+  "wall_intermediate": {
+   "triangles": 1644,
+   "bbox": [
+    [
+     -0.081,
+     -0.081,
+     -1.742
+    ],
+    [
+     0.081,
+     0.081,
+     -1.206
+    ]
+   ],
+   "notes": [
+    "v2 intermediate ring(.059,.049,.34,0)",
+    "v2 intermediate ring(.061,.049,.194,-.257) snapped .061->.059",
+    "v2 intermediate ring(.064,.049,.015,-.177)",
+    "v2 intermediate ring(.081,.049,.022,.171)"
+   ]
+  },
+  "wall_ringHigh": {
+   "triangles": 17828,
+   "bbox": [
+    [
+     -0.49,
+     -0.49,
+     -1.207
+    ],
+    [
+     0.49,
+     0.49,
+     -1.053
+    ]
+   ],
+   "notes": [
+    "v2 gearGeometry(nr,pitch,.118,0,true): body from the tooth-tip radius",
+    "v2 ring(ringP,pitch+.057,pitch+.041,.018,+-.068) snapped"
+   ]
+  },
+  "wall_ringLow": {
+   "triangles": 18440,
+   "bbox": [
+    [
+     -0.51,
+     -0.51,
+     -1.567
+    ],
+    [
+     0.51,
+     0.51,
+     -1.413
+    ]
+   ],
+   "notes": [
+    "v2 gearGeometry(nr,pitch,.118,0,true): body from the tooth-tip radius",
+    "v2 ring(ringP,pitch+.057,pitch+.041,.018,+-.068) snapped"
+   ]
+  },
+  "wall_seal": {
+   "triangles": 8284,
+   "bbox": [
+    [
+     -0.389,
+     -0.389,
+     -0.941
+    ],
+    [
+     0.389,
+     0.389,
+     -0.8825
+    ]
+   ],
+   "notes": [
+    "v2 hubBearing outboard (solid envelope)",
+    "v2 seals ring(.389,.28,.022,-.930)"
+   ]
+  },
+  "wall_shaft": {
+   "triangles": 288,
+   "bbox": [
+    [
+     -0.046,
+     -0.046,
+     -1.205
+    ],
+    [
+     0.046,
+     0.046,
+     -0.985
+    ]
+   ],
+   "notes": [
+    "v2 shaft cylinder(.046,.046,2.545)"
+   ]
+  },
+  "wall_spindle": {
+   "triangles": 41292,
+   "bbox": [
+    [
+     -0.546,
+     -0.546,
+     -1.559
+    ],
+    [
+     0.546,
+     0.546,
+     -0.8825
+    ]
+   ],
+   "notes": [
+    "v2 ring(spindle,.280,.157,1.36) main tube; bore sealed (assumption)",
+    "v2 ring(spindle,.281,.157,.09,-.555) snapped 1 mm",
+    "v2 ring(spindle,.302,.157,.026,-.67)",
+    "v2 ring(spindle,.484,.157,.020,-1.005) snapped 1 mm",
+    "v2 ring(spindle,.484,.468,.068,-1.043) snapped 1 mm",
+    "v2 ring(spindle,.526,.483,.018,high+.067)",
+    "v2 ring(spindle,.526,.5,.018,low+.067)",
+    "v2 ring(spindle,.526,.5,.018,low-.067) TRIMMED (was [-1.566,-1.548])",
+    "v2 ring(spindle,.532,.510,.546,-1.279); outer snapped to hub (4 mm gap closed)"
+   ]
+  }
+ }
+}

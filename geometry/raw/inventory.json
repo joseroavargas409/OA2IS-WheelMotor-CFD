@@ -1,0 +1,1644 @@
+{
+ "source": "wheel-motor-inspector@64bd32e (dist/assembly-v3.js createModel)",
+ "units": "m",
+ "axis": [
+  0,
+  0,
+  1
+ ],
+ "model_ratio": 32.608695652173914,
+ "layout": {
+  "motor": 0.85,
+  "high": -1.13,
+  "low": -1.49,
+  "hub": -0.725,
+  "hubLength": 1.95,
+  "spindle": -0.31,
+  "spindleLength": 1.36,
+  "bearings": [
+   -0.865,
+   0.115
+  ]
+ },
+ "stages": [
+  {
+   "id": "High",
+   "ns": 18,
+   "np": 27,
+   "nr": 72,
+   "input": 1,
+   "z": -1.13,
+   "pitch": 0.425
+  },
+  {
+   "id": "Low",
+   "ns": 23,
+   "np": 52,
+   "nr": 127,
+   "input": 0.2,
+   "z": -1.49,
+   "pitch": 0.442
+  }
+ ],
+ "parts": [
+  {
+   "id": "housing",
+   "name": "Carcasa del motor",
+   "category": "Estructura",
+   "visible_by_default": true,
+   "evidence": "Exterior observado; perfil aproximado",
+   "groups": [
+    {
+     "file": "housing.stl",
+     "mesh_count": 5,
+     "triangles": 24992,
+     "roles": [],
+     "bbox_min": [
+      -0.5230000019073486,
+      -0.5230000019073486,
+      0.4770000007748604
+     ],
+     "bbox_max": [
+      0.5230000019073486,
+      0.5230000019073486,
+      1.2619999987334012
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "flange",
+   "name": "Brida de montaje",
+   "category": "Estructura",
+   "visible_by_default": true,
+   "evidence": "Forma exterior referenciada",
+   "groups": [
+    {
+     "file": "flange.stl",
+     "mesh_count": 16,
+     "triangles": 63200,
+     "roles": [],
+     "bbox_min": [
+      -0.6850000023841858,
+      -0.6850000023841858,
+      0.2164999997615814
+     ],
+     "bbox_max": [
+      0.6850000023841858,
+      0.6850000023841858,
+      0.5195000001862645
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "hub",
+   "name": "Cubo de rueda",
+   "category": "Estructura",
+   "visible_by_default": true,
+   "evidence": "Arquitectura referenciada",
+   "groups": [
+    {
+     "file": "hub.stl",
+     "mesh_count": 27,
+     "triangles": 71336,
+     "roles": [],
+     "bbox_min": [
+      -0.6000000238418579,
+      -0.6000000238418579,
+      -1.7789999996125698
+     ],
+     "bbox_max": [
+      0.6000000238418579,
+      0.6000000238418579,
+      0.25000002384185793
+     ],
+     "motion_chain": [
+      {
+       "name": "Cubo de rueda",
+       "ratio": 0.030666666666666665,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -0.725
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "spindle",
+   "name": "Spindle / soporte fijo",
+   "category": "Estructura",
+   "visible_by_default": true,
+   "evidence": "Ubicación aproximada",
+   "groups": [
+    {
+     "file": "spindle.stl",
+     "mesh_count": 13,
+     "triangles": 13312,
+     "roles": [],
+     "bbox_min": [
+      -0.5320000052452087,
+      -0.5320000052452087,
+      -1.5659999996125697
+     ],
+     "bbox_max": [
+      0.5320000052452087,
+      0.5320000052452087,
+      0.3700000071525574
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "stator",
+   "name": "Núcleo del estator",
+   "category": "Motor eléctrico",
+   "visible_by_default": true,
+   "evidence": "Componente documentado",
+   "groups": [
+    {
+     "file": "stator.stl",
+     "mesh_count": 85,
+     "triangles": 38464,
+     "roles": [
+      "lamination"
+     ],
+     "bbox_min": [
+      -0.44600000977516174,
+      -0.44600000977516174,
+      0.5799999892711639
+     ],
+     "bbox_max": [
+      0.44600000977516174,
+      0.44600000977516174,
+      1.1200000107288361
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "windings",
+   "name": "Bobinados de cobre",
+   "category": "Motor eléctrico",
+   "visible_by_default": true,
+   "evidence": "Componente documentado",
+   "groups": [
+    {
+     "file": "windings.stl",
+     "mesh_count": 192,
+     "triangles": 133056,
+     "roles": [],
+     "bbox_min": [
+      -0.3726924657821655,
+      -0.3725147545337677,
+      0.5042165577411651
+     ],
+     "bbox_max": [
+      0.3725147545337677,
+      0.3726924657821655,
+      1.195783442258835
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "rotor",
+   "name": "Núcleo del rotor",
+   "category": "Motor eléctrico",
+   "visible_by_default": true,
+   "evidence": "Componente documentado",
+   "groups": [
+    {
+     "file": "rotor.stl",
+     "mesh_count": 43,
+     "triangles": 52992,
+     "roles": [
+      "lamination"
+     ],
+     "bbox_min": [
+      -0.2989998161792755,
+      -0.2989998161792755,
+      0.5330000003352762
+     ],
+     "bbox_max": [
+      0.2989998161792755,
+      0.2989998161792755,
+      1.1669999996647238
+     ],
+     "motion_chain": [
+      {
+       "name": "Núcleo del rotor",
+       "ratio": 1,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        0.85
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cage",
+   "name": "Jaula del rotor",
+   "category": "Motor eléctrico",
+   "visible_by_default": true,
+   "evidence": "Detalle ilustrativo",
+   "groups": [
+    {
+     "file": "cage.stl",
+     "mesh_count": 42,
+     "triangles": 9728,
+     "roles": [],
+     "bbox_min": [
+      -0.3019999861717224,
+      -0.3019999861717224,
+      0.5410000002235174
+     ],
+     "bbox_max": [
+      0.3019999861717224,
+      0.3019999861717224,
+      1.1589999997764826
+     ],
+     "motion_chain": [
+      {
+       "name": "Jaula del rotor",
+       "ratio": 1,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        0.85
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "shaft",
+   "name": "Eje del rotor",
+   "category": "Motor eléctrico",
+   "visible_by_default": true,
+   "evidence": "Componente documentado",
+   "groups": [
+    {
+     "file": "shaft.stl",
+     "mesh_count": 22,
+     "triangles": 2776,
+     "roles": [],
+     "bbox_min": [
+      -0.05999999865889549,
+      -0.05999999865889549,
+      -1.2050000381469728
+     ],
+     "bbox_max": [
+      0.05999999865889549,
+      0.05999999865889549,
+      1.3400000381469725
+     ],
+     "motion_chain": [
+      {
+       "name": "Eje del rotor",
+       "ratio": 1,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        0.105
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "rotorBearing",
+   "name": "Rodamientos del rotor",
+   "category": "Apoyos y sellos",
+   "visible_by_default": true,
+   "evidence": "Ubicación referenciada; tipo aproximado",
+   "groups": [
+    {
+     "file": "rotorBearing.stl",
+     "mesh_count": 72,
+     "triangles": 12416,
+     "roles": [],
+     "bbox_min": [
+      -0.10700000077486038,
+      -0.10700000077486038,
+      0.4885199999739229
+     ],
+     "bbox_max": [
+      0.10700000077486038,
+      0.10700000077486038,
+      1.211480000026077
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "hubBearing",
+   "name": "Rodamientos del cubo",
+   "category": "Apoyos y sellos",
+   "visible_by_default": true,
+   "evidence": "Geometría ilustrativa",
+   "groups": [
+    {
+     "file": "hubBearing.stl",
+     "mesh_count": 105,
+     "triangles": 14528,
+     "roles": [
+      "separator"
+     ],
+     "bbox_min": [
+      -0.36800000071525574,
+      -0.36800000071525574,
+      -0.9025600000260771
+     ],
+     "bbox_max": [
+      0.36800000071525574,
+      0.36800000071525574,
+      0.15256000002607706
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "seals",
+   "name": "Sellos y juntas",
+   "category": "Apoyos y sellos",
+   "visible_by_default": true,
+   "evidence": "Detalle ilustrativo",
+   "groups": [
+    {
+     "file": "seals.stl",
+     "mesh_count": 14,
+     "triangles": 20480,
+     "roles": [],
+     "bbox_min": [
+      -0.5450000166893005,
+      -0.5450000166893005,
+      -1.750000000052154
+     ],
+     "bbox_max": [
+      0.5450000166893005,
+      0.5450000166893005,
+      1.2580000000260771
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "ringHigh",
+   "name": "Corona · alta",
+   "category": "Reducción de alta",
+   "visible_by_default": true,
+   "evidence": "Topología GE; dentado ilustrativo",
+   "groups": [
+    {
+     "file": "ringHigh.stl",
+     "mesh_count": 3,
+     "triangles": 7136,
+     "roles": [],
+     "bbox_min": [
+      -0.49000000953674316,
+      -0.49000000953674316,
+      -1.2069999996125698
+     ],
+     "bbox_max": [
+      0.49000000953674316,
+      0.49000000953674316,
+      -1.05300000038743
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "sunHigh",
+   "name": "Solar · alta",
+   "category": "Reducción de alta",
+   "visible_by_default": true,
+   "evidence": "Topología GE; dentado ilustrativo",
+   "groups": [
+    {
+     "file": "sunHigh.stl",
+     "mesh_count": 1,
+     "triangles": 2672,
+     "roles": [],
+     "bbox_min": [
+      -0.13754922299635133,
+      -0.13672652452604922,
+      -1.1818999993801116
+     ],
+     "bbox_max": [
+      0.13754922299635133,
+      0.13672652452604922,
+      -1.0781000006198882
+     ],
+     "motion_chain": [
+      {
+       "name": "Solar · alta",
+       "ratio": 1,
+       "phase": 0.17453292519943295,
+       "pivot_world": [
+        0,
+        0,
+        -1.13
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "planetsHigh",
+   "name": "Satélites · alta",
+   "category": "Reducción de alta",
+   "visible_by_default": true,
+   "evidence": "Topología GE; dentado ilustrativo",
+   "groups": [
+    {
+     "file": "planetsHigh_0.stl",
+     "mesh_count": 3,
+     "triangles": 5800,
+     "roles": [],
+     "bbox_min": [
+      0.07538648007092763,
+      -0.19082611041951097,
+      -1.1970000002160668
+     ],
+     "bbox_max": [
+      0.456458599807786,
+      0.1907565555571573,
+      -1.062999999783933
+     ],
+     "motion_chain": [
+      {
+       "name": "Satélites · alta",
+       "ratio": 0.2,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -1.13
+       ]
+      },
+      {
+       "name": "",
+       "ratio": -0.5333333333333333,
+       "phase": -0.11635528346628864,
+       "pivot_world": [
+        0.265625,
+        0,
+        -1.13
+       ]
+      }
+     ]
+    },
+    {
+     "file": "planetsHigh_1.stl",
+     "mesh_count": 3,
+     "triangles": 5800,
+     "roles": [],
+     "bbox_min": [
+      -0.3637427757533898,
+      -0.0006195902262382535,
+      -1.1970000002160668
+     ],
+     "bbox_max": [
+      0.09758237274657577,
+      0.4609644754830227,
+      -1.062999999783933
+     ],
+     "motion_chain": [
+      {
+       "name": "Satélites · alta",
+       "ratio": 0.2,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -1.13
+       ]
+      },
+      {
+       "name": "",
+       "ratio": -0.5333333333333333,
+       "phase": -3.6070137874549473,
+       "pivot_world": [
+        -0.13281249999999994,
+        0.23003799788024154,
+        -1.13
+       ]
+      }
+     ]
+    },
+    {
+     "file": "planetsHigh_2.stl",
+     "mesh_count": 3,
+     "triangles": 5800,
+     "roles": [],
+     "bbox_min": [
+      -0.375574703644659,
+      -0.47321170135556223,
+      -1.1970000002160668
+     ],
+     "bbox_max": [
+      0.11036085227524486,
+      0.012699913506470428,
+      -1.062999999783933
+     ],
+     "motion_chain": [
+      {
+       "name": "Satélites · alta",
+       "ratio": 0.2,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -1.13
+       ]
+      },
+      {
+       "name": "",
+       "ratio": -0.5333333333333333,
+       "phase": -7.0976722914436055,
+       "pivot_world": [
+        -0.1328125000000001,
+        -0.23003799788024148,
+        -1.13
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "carrierHigh",
+   "name": "Portaplanetas · alta",
+   "category": "Reducción de alta",
+   "visible_by_default": true,
+   "evidence": "Topología GE; dentado ilustrativo",
+   "groups": [
+    {
+     "file": "carrierHigh.stl",
+     "mesh_count": 15,
+     "triangles": 7080,
+     "roles": [],
+     "bbox_min": [
+      -0.3840000033378601,
+      -0.3840000033378601,
+      -1.2550000003799795
+     ],
+     "bbox_max": [
+      0.3840000033378601,
+      0.3840000033378601,
+      -1.0194999995827674
+     ],
+     "motion_chain": [
+      {
+       "name": "Portaplanetas · alta",
+       "ratio": 0.2,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -1.13
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "intermediate",
+   "name": "Eje intermedio",
+   "category": "Reducción de alta",
+   "visible_by_default": true,
+   "evidence": "Topología GE; dentado ilustrativo",
+   "groups": [
+    {
+     "file": "intermediate.stl",
+     "mesh_count": 4,
+     "triangles": 4096,
+     "roles": [],
+     "bbox_min": [
+      -0.08100000023841858,
+      -0.08100000023841858,
+      -1.742000002861023
+     ],
+     "bbox_max": [
+      0.08100000023841858,
+      0.08100000023841858,
+      -1.2060000000596045
+     ],
+     "motion_chain": [
+      {
+       "name": "Eje intermedio",
+       "ratio": 0.2,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -1.388
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ringLow",
+   "name": "Corona · baja",
+   "category": "Reducción de baja",
+   "visible_by_default": true,
+   "evidence": "Topología GE; dentado ilustrativo",
+   "groups": [
+    {
+     "file": "ringLow.stl",
+     "mesh_count": 3,
+     "triangles": 10436,
+     "roles": [],
+     "bbox_min": [
+      -0.5070000290870667,
+      -0.5070000290870667,
+      -1.5669999996125699
+     ],
+     "bbox_max": [
+      0.5070000290870667,
+      0.5070000290870667,
+      -1.4130000003874301
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "sunLow",
+   "name": "Solar · baja",
+   "category": "Reducción de baja",
+   "visible_by_default": true,
+   "evidence": "Topología GE; dentado ilustrativo",
+   "groups": [
+    {
+     "file": "sunLow.stl",
+     "mesh_count": 1,
+     "triangles": 3272,
+     "roles": [],
+     "bbox_min": [
+      -0.08746664226055145,
+      -0.08787452429533005,
+      -1.5418999993801117
+     ],
+     "bbox_max": [
+      0.0878726914525032,
+      0.08787452429533005,
+      -1.4381000006198883
+     ],
+     "motion_chain": [
+      {
+       "name": "Solar · baja",
+       "ratio": 0.2,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -1.49
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "planetsLow",
+   "name": "Satélites · baja",
+   "category": "Reducción de baja",
+   "visible_by_default": true,
+   "evidence": "Topología GE; dentado ilustrativo",
+   "groups": [
+    {
+     "file": "planetsLow_0.stl",
+     "mesh_count": 3,
+     "triangles": 8800,
+     "roles": [],
+     "bbox_min": [
+      0.061150075496308076,
+      -0.19987354655093603,
+      -1.5570000002160669
+     ],
+     "bbox_max": [
+      0.46089716859818014,
+      0.19987354655093603,
+      -1.422999999783933
+     ],
+     "motion_chain": [
+      {
+       "name": "Satélites · baja",
+       "ratio": 0.03066666666666667,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -1.49
+       ]
+      },
+      {
+       "name": "",
+       "ratio": -0.0748974358974359,
+       "phase": -0.06041524333826525,
+       "pivot_world": [
+        0.2610236220472441,
+        0,
+        -1.49
+       ]
+      }
+     ]
+    },
+    {
+     "file": "planetsLow_1.stl",
+     "mesh_count": 3,
+     "triangles": 8800,
+     "roles": [],
+     "bbox_min": [
+      -0.330385357574558,
+      0.026179541129805306,
+      -1.5570000002160669
+     ],
+     "bbox_max": [
+      0.069361735527314,
+      0.4259266342316773,
+      -1.422999999783933
+     ],
+     "motion_chain": [
+      {
+       "name": "Satélites · baja",
+       "ratio": 0.03066666666666667,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -1.49
+       ]
+      },
+      {
+       "name": "",
+       "ratio": -0.0748974358974359,
+       "phase": -3.081177410251528,
+       "pivot_world": [
+        -0.130511811023622,
+        0.2260530876807413,
+        -1.49
+       ]
+      }
+     ]
+    },
+    {
+     "file": "planetsLow_2.stl",
+     "mesh_count": 3,
+     "triangles": 8800,
+     "roles": [],
+     "bbox_min": [
+      -0.35027178699228234,
+      -0.44581306364940143,
+      -1.5570000002160669
+     ],
+     "bbox_max": [
+      0.08924816494503801,
+      -0.006293111712081051,
+      -1.422999999783933
+     ],
+     "motion_chain": [
+      {
+       "name": "Satélites · baja",
+       "ratio": 0.03066666666666667,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -1.49
+       ]
+      },
+      {
+       "name": "",
+       "ratio": -0.0748974358974359,
+       "phase": -6.10193957716479,
+       "pivot_world": [
+        -0.13051181102362217,
+        -0.22605308768074123,
+        -1.49
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "carrierLow",
+   "name": "Portaplanetas · baja",
+   "category": "Reducción de baja",
+   "visible_by_default": true,
+   "evidence": "Topología GE; dentado ilustrativo",
+   "groups": [
+    {
+     "file": "carrierLow.stl",
+     "mesh_count": 15,
+     "triangles": 7080,
+     "roles": [],
+     "bbox_min": [
+      -0.5360000133514404,
+      -0.5360000133514404,
+      -1.6150000003799796
+     ],
+     "bbox_max": [
+      0.5360000133514404,
+      0.5360000133514404,
+      -1.3794999995827675
+     ],
+     "motion_chain": [
+      {
+       "name": "Portaplanetas · baja",
+       "ratio": 0.03066666666666667,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -1.49
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "serviceBrake",
+   "name": "Freno de servicio",
+   "category": "Frenos",
+   "visible_by_default": true,
+   "evidence": "Sistema documentado; detalle aproximado",
+   "groups": [
+    {
+     "file": "serviceBrake_0.stl",
+     "mesh_count": 200,
+     "triangles": 10496,
+     "roles": [],
+     "bbox_min": [
+      -0.43700000005215406,
+      -0.43700000005215406,
+      0.24499999981001022
+     ],
+     "bbox_max": [
+      0.43700000005215406,
+      0.43700000005215406,
+      0.43500000018998985
+     ],
+     "motion_chain": [
+      {
+       "name": "Freno de servicio",
+       "ratio": 0.030666666666666665,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        0.34
+       ]
+      }
+     ]
+    },
+    {
+     "file": "serviceBrake_1.stl",
+     "mesh_count": 12,
+     "triangles": 12800,
+     "roles": [],
+     "bbox_min": [
+      -0.4490000009536743,
+      -0.4490000009536743,
+      0.21200000038743022
+     ],
+     "bbox_max": [
+      0.4490000009536743,
+      0.4490000009536743,
+      0.5219999998882413
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "parkingBrake",
+   "name": "Freno de estacionamiento",
+   "category": "Frenos",
+   "visible_by_default": true,
+   "evidence": "Sistema OEM documentado; geometría aproximada",
+   "groups": [
+    {
+     "file": "parkingBrake_0.stl",
+     "mesh_count": 115,
+     "triangles": 8464,
+     "roles": [
+      "dry_rotating_disc"
+     ],
+     "bbox_min": [
+      -0.18799999356269836,
+      -0.18799999356269836,
+      1.2619999970793725
+     ],
+     "bbox_max": [
+      0.18799999356269836,
+      0.18799999356269836,
+      1.4340000029206277
+     ],
+     "motion_chain": [
+      {
+       "name": "Discos secos ligados al rotor",
+       "ratio": 1,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        1.33
+       ]
+      }
+     ]
+    },
+    {
+     "file": "parkingBrake_1.stl",
+     "mesh_count": 114,
+     "triangles": 7440,
+     "roles": [
+      "separator"
+     ],
+     "bbox_min": [
+      -0.2014999998062849,
+      -0.1995674752193109,
+      1.3029999999050053
+     ],
+     "bbox_max": [
+      0.2014999998062849,
+      0.1995674752193109,
+      1.402000000094995
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "cooling",
+   "name": "Terminales y enfriamiento",
+   "category": "Auxiliares",
+   "visible_by_default": true,
+   "evidence": "Representación de referencia",
+   "groups": [
+    {
+     "file": "cooling.stl",
+     "mesh_count": 11,
+     "triangles": 2244,
+     "roles": [],
+     "bbox_min": [
+      -0.2329903806373477,
+      0.3429999998509884,
+      -0.5609919428825378
+     ],
+     "bbox_max": [
+      0.4051676392555237,
+      0.570770800113678,
+      1.17209792137146
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "fasteners",
+   "name": "Pernos y espárragos",
+   "category": "Auxiliares",
+   "visible_by_default": true,
+   "evidence": "Detalle visual aproximado",
+   "groups": [
+    {
+     "file": "fasteners_0.stl",
+     "mesh_count": 198,
+     "triangles": 71808,
+     "roles": [],
+     "bbox_min": [
+      -0.6339200004786253,
+      -0.6339200004786253,
+      0.26800000022351744
+     ],
+     "bbox_max": [
+      0.6339200004786253,
+      0.6339200004786253,
+      1.323000000372529
+     ],
+     "motion_chain": []
+    },
+    {
+     "file": "fasteners_1.stl",
+     "mesh_count": 108,
+     "triangles": 39168,
+     "roles": [],
+     "bbox_min": [
+      -0.5420800001099706,
+      -0.5420800001099706,
+      -1.7799999997764826
+     ],
+     "bbox_max": [
+      0.5420800001099706,
+      0.5420800001099706,
+      -1.716999999627471
+     ],
+     "motion_chain": [
+      {
+       "name": "Pernos y espárragos",
+       "ratio": 0.030666666666666665,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -1.77
+       ]
+      }
+     ]
+    },
+    {
+     "file": "fasteners_2.stl",
+     "mesh_count": 24,
+     "triangles": 8704,
+     "roles": [],
+     "bbox_min": [
+      -0.14223999974131585,
+      -0.14223999974131585,
+      -1.8179999997764826
+     ],
+     "bbox_max": [
+      0.14223999974131585,
+      0.14223999974131585,
+      -1.754999999627471
+     ],
+     "motion_chain": [
+      {
+       "name": "Pernos y espárragos",
+       "ratio": 0.030666666666666665,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -1.808
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "rims",
+   "name": "Llantas dobles",
+   "category": "Contexto de rueda",
+   "visible_by_default": false,
+   "evidence": "Contexto aproximado",
+   "groups": [
+    {
+     "file": "rims.stl",
+     "mesh_count": 32,
+     "triangles": 10528,
+     "roles": [],
+     "bbox_min": [
+      -0.8230000138282776,
+      -0.8230000138282776,
+      -1.3080000008642674
+     ],
+     "bbox_max": [
+      0.8230000138282776,
+      0.8230000138282776,
+      0.23800000086426737
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "tires",
+   "name": "Neumáticos dobles",
+   "category": "Contexto de rueda",
+   "visible_by_default": false,
+   "evidence": "Contexto aproximado",
+   "groups": [
+    {
+     "file": "tires.stl",
+     "mesh_count": 226,
+     "triangles": 6144,
+     "roles": [],
+     "bbox_min": [
+      -1.3687596675360607,
+      -1.3519999999403953,
+      -1.3499999940395355
+     ],
+     "bbox_max": [
+      1.3687596675360607,
+      1.3519999999403953,
+      0.2799999940395355
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "endShields",
+   "name": "Escudos del motor",
+   "category": "Apoyos y sellos",
+   "visible_by_default": true,
+   "evidence": "Apoyos reconstruidos",
+   "groups": [
+    {
+     "file": "endShields.stl",
+     "mesh_count": 22,
+     "triangles": 6336,
+     "roles": [
+      "shield_spoke"
+     ],
+     "bbox_min": [
+      -0.4569999873638153,
+      -0.4569999873638153,
+      0.4629999997317791
+     ],
+     "bbox_max": [
+      0.4569999873638153,
+      0.4569999873638153,
+      1.2370000002682209
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "bearingSeats",
+   "name": "Asientos del cubo",
+   "category": "Apoyos y sellos",
+   "visible_by_default": true,
+   "evidence": "Apoyos reconstruidos",
+   "groups": [
+    {
+     "file": "bearingSeats.stl",
+     "mesh_count": 6,
+     "triangles": 6144,
+     "roles": [],
+     "bbox_min": [
+      -0.5370000004768372,
+      -0.5370000004768372,
+      -0.916000000052154
+     ],
+     "bbox_max": [
+      0.5370000004768372,
+      0.5370000004768372,
+      0.1589999997615814
+     ],
+     "motion_chain": [
+      {
+       "name": "Asientos del cubo",
+       "ratio": 0.030666666666666665,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -0.725
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "planetBearings",
+   "name": "Apoyos de satélites",
+   "category": "Reducción final",
+   "visible_by_default": true,
+   "evidence": "Detalle ilustrativo",
+   "groups": [
+    {
+     "file": "planetBearings_0.stl",
+     "mesh_count": 144,
+     "triangles": 34800,
+     "roles": [],
+     "bbox_min": [
+      -0.17381250113248836,
+      -0.27103799901272974,
+      -1.195480000026077
+     ],
+     "bbox_max": [
+      0.30662500113248825,
+      0.2710379990127298,
+      -1.0645199999739228
+     ],
+     "motion_chain": [
+      {
+       "name": "Apoyos de satélites",
+       "ratio": 0.2,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -1.13
+       ]
+      }
+     ]
+    },
+    {
+     "file": "planetBearings_1.stl",
+     "mesh_count": 144,
+     "triangles": 34800,
+     "roles": [],
+     "bbox_min": [
+      -0.17151181215611042,
+      -0.2670530888132295,
+      -1.5554800000260771
+     ],
+     "bbox_max": [
+      0.30202362317973236,
+      0.26705308881322953,
+      -1.4245199999739229
+     ],
+     "motion_chain": [
+      {
+       "name": "Apoyos de satélites",
+       "ratio": 0.03066666666666667,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -1.49
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "thrust",
+   "name": "Arandelas y retenedor axial",
+   "category": "Reducción final",
+   "visible_by_default": true,
+   "evidence": "Elementos descritos en patente",
+   "groups": [
+    {
+     "file": "thrust.stl",
+     "mesh_count": 5,
+     "triangles": 12344,
+     "roles": [],
+     "bbox_min": [
+      -0.1509999930858612,
+      -0.1509999930858612,
+      -1.7980000002682208
+     ],
+     "bbox_max": [
+      0.1509999930858612,
+      0.1509999930858612,
+      -1.2119999996200204
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "encoder",
+   "name": "Captador de velocidad",
+   "category": "Auxiliares",
+   "visible_by_default": true,
+   "evidence": "Elemento visible en video",
+   "groups": [
+    {
+     "file": "encoder_0.stl",
+     "mesh_count": 194,
+     "triangles": 7448,
+     "roles": [],
+     "bbox_min": [
+      -0.21750000010803341,
+      -0.21750000010803341,
+      1.2410000001117587
+     ],
+     "bbox_max": [
+      0.21750000010803341,
+      0.21750000010803341,
+      1.2509999998882413
+     ],
+     "motion_chain": [
+      {
+       "name": "Captador de velocidad",
+       "ratio": 1,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        1.246
+       ]
+      }
+     ]
+    },
+    {
+     "file": "encoder_1.stl",
+     "mesh_count": 3,
+     "triangles": 460,
+     "roles": [],
+     "bbox_min": [
+      -0.29209280014038086,
+      0.21399999913573264,
+      1.1123450479507446
+     ],
+     "bbox_max": [
+      0.0215000007301569,
+      0.45360538363456726,
+      1.2600000004321337
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "jointBands",
+   "name": "Bridas y uniones del cubo",
+   "category": "Estructura",
+   "visible_by_default": true,
+   "evidence": "Detalle visual aproximado",
+   "groups": [
+    {
+     "file": "jointBands.stl",
+     "mesh_count": 199,
+     "triangles": 107776,
+     "roles": [],
+     "bbox_min": [
+      -0.6389999985694885,
+      -0.6389999985694885,
+      -1.017000000923872
+     ],
+     "bbox_max": [
+      0.6389999985694885,
+      0.6389999985694885,
+      0.09250000002235181
+     ],
+     "motion_chain": [
+      {
+       "name": "Bridas y uniones del cubo",
+       "ratio": 0.030666666666666665,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -0.725
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "outerFrame",
+   "name": "Tambor exterior ventilado",
+   "category": "Estructura",
+   "visible_by_default": false,
+   "evidence": "Referencia CIMETP; variante sin identificar",
+   "groups": [
+    {
+     "file": "outerFrame.stl",
+     "mesh_count": 14,
+     "triangles": 7040,
+     "roles": [],
+     "bbox_min": [
+      -0.6179999709129333,
+      -0.6179999709129333,
+      -0.9280000002682209
+     ],
+     "bbox_max": [
+      0.6179999709129333,
+      0.6179999709129333,
+      0.008000000268220897
+     ],
+     "motion_chain": [
+      {
+       "name": "Tambor exterior ventilado",
+       "ratio": 0.030666666666666665,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -0.46
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "servicePlugs",
+   "name": "Tapones de inspección",
+   "category": "Auxiliares",
+   "visible_by_default": true,
+   "evidence": "Detalle ilustrativo",
+   "groups": [
+    {
+     "file": "servicePlugs.stl",
+     "mesh_count": 6,
+     "triangles": 360,
+     "roles": [],
+     "bbox_min": [
+      -0.47662578864123206,
+      -0.5245273278340326,
+      -1.5652126104165847
+     ],
+     "bbox_max": [
+      0.46108110148642467,
+      0.41373279913626304,
+      -0.264137264814668
+     ],
+     "motion_chain": [
+      {
+       "name": "Tapones de inspección",
+       "ratio": 0.030666666666666665,
+       "phase": 0,
+       "pivot_world": [
+        0,
+        0,
+        -0.725
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "liftingLugs",
+   "name": "Orejas de carcasa",
+   "category": "Estructura",
+   "visible_by_default": true,
+   "evidence": "Exterior observado; forma aproximada",
+   "groups": [
+    {
+     "file": "liftingLugs.stl",
+     "mesh_count": 4,
+     "triangles": 2072,
+     "roles": [
+      "lug_root"
+     ],
+     "bbox_min": [
+      -0.0160000007599592,
+      -0.5870000009536743,
+      0.47599999904632573
+     ],
+     "bbox_max": [
+      0.016000000759959256,
+      0.5870000009536743,
+      0.6240000009536744
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "slotLiners",
+   "name": "Aislación de ranuras",
+   "category": "Motor eléctrico",
+   "visible_by_default": true,
+   "evidence": "Detalle de proceso reconstruido",
+   "groups": [
+    {
+     "file": "slotLiners.stl",
+     "mesh_count": 144,
+     "triangles": 1728,
+     "roles": [],
+     "bbox_min": [
+      -0.362675567421344,
+      -0.36267556742134405,
+      0.5709999859333038
+     ],
+     "bbox_max": [
+      0.362675567421344,
+      0.362675567421344,
+      1.1290000140666963
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "windingLacing",
+   "name": "Amarres de bobinado",
+   "category": "Motor eléctrico",
+   "visible_by_default": true,
+   "evidence": "Proceso visible; patrón aproximado",
+   "groups": [
+    {
+     "file": "windingLacing.stl",
+     "mesh_count": 48,
+     "triangles": 15360,
+     "roles": [],
+     "bbox_min": [
+      -0.3580976724624634,
+      -0.3580976724624634,
+      0.511229282617569
+     ],
+     "bbox_max": [
+      0.3580976724624634,
+      0.3580976724624634,
+      1.188762104511261
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "phaseLinks",
+   "name": "Puentes de terminales",
+   "category": "Motor eléctrico",
+   "visible_by_default": true,
+   "evidence": "Detalle de conexión ilustrativo",
+   "groups": [
+    {
+     "file": "phaseLinks.stl",
+     "mesh_count": 9,
+     "triangles": 1608,
+     "roles": [],
+     "bbox_min": [
+      0.2489999992400408,
+      0.21689669787883759,
+      0.8199999996274709
+     ],
+     "bbox_max": [
+      0.3710000007599592,
+      0.4140000000949949,
+      1.1389204025268556
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "parkingHousing",
+   "name": "Alojamiento del freno seco",
+   "category": "Frenos",
+   "visible_by_default": true,
+   "evidence": "Sistema documentado; forma aproximada",
+   "groups": [
+    {
+     "file": "parkingHousing.stl",
+     "mesh_count": 16,
+     "triangles": 4384,
+     "roles": [],
+     "bbox_min": [
+      -0.2290000021457672,
+      -0.2290000021457672,
+      1.241500000141561
+     ],
+     "bbox_max": [
+      0.2290000021457672,
+      0.2290000021457672,
+      1.4889999996125698
+     ],
+     "motion_chain": []
+    }
+   ]
+  },
+  {
+   "id": "parkingActuator",
+   "name": "Pistón y resortes de freno",
+   "category": "Frenos",
+   "visible_by_default": true,
+   "evidence": "Principio OEM; disposición ilustrativa",
+   "groups": [
+    {
+     "file": "parkingActuator.stl",
+     "mesh_count": 15,
+     "triangles": 23680,
+     "roles": [
+      "parking_piston",
+      "parking_spring"
+     ],
+     "bbox_min": [
+      -0.20100000500679016,
+      -0.20100000500679016,
+      1.409500000167638
+     ],
+     "bbox_max": [
+      0.20100000500679016,
+      0.20100000500679016,
+      1.4847754584848882
+     ],
+     "motion_chain": []
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,9 @@
+# generated, large or machine-specific
+__pycache__/
+*.pyc
+geometry/raw/*.stl
+results/*/frames/
+cases/*/
+!cases/README.md
+*.foam
+processor*/

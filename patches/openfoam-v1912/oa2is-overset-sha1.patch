@@ -1,0 +1,105 @@
+diff -ru a/src/OpenFOAM/db/IOstreams/hashes/OSHA1stream.H b/src/OpenFOAM/db/IOstreams/hashes/OSHA1stream.H
+--- a/src/OpenFOAM/db/IOstreams/hashes/OSHA1stream.H	2020-06-26 04:35:55.000000000 -0400
++++ b/src/OpenFOAM/db/IOstreams/hashes/OSHA1stream.H	2026-10-13 21:13:42.949773717 -0300
+@@ -70,6 +70,20 @@
+             return n;
+         }
+ 
++        //- Put single character.
++        //  OA2IS patch: libstdc++ from GCC >= 13 sends single characters
++        //  through overflow(); the std::streambuf default returns EOF, which
++        //  sets badbit and aborts every functionObject digest.
++        virtual int overflow(int c = EOF)
++        {
++            if (c != EOF)
++            {
++                const char ch = char(c);
++                sha1_.append(&ch, 1);
++            }
++            return (c == EOF) ? 0 : c;
++        }
++
+     public:
+ 
+         //- Construct null
+diff -ru a/src/overset/cellCellStencil/inverseDistance/inverseDistanceCellCellStencil.C b/src/overset/cellCellStencil/inverseDistance/inverseDistanceCellCellStencil.C
+--- a/src/overset/cellCellStencil/inverseDistance/inverseDistanceCellCellStencil.C	2020-06-26 04:35:55.000000000 -0400
++++ b/src/overset/cellCellStencil/inverseDistance/inverseDistanceCellCellStencil.C	2026-10-13 21:13:42.951363628 -0300
+@@ -1372,16 +1372,14 @@
+                         }
+                         else
+                         {
+-                            allWeight[own] = 0.0;
+-                            allCellTypes[own] = HOLE;
+-                            // Add faces of cell as new front
+-                            seedCell
+-                            (
+-                                own,
+-                                1.0,
+-                                newIsFront,
+-                                newFraction
+-                            );
++                            // OA2IS patch: a cell next to a hole that has no
++                            // donor stays CALCULATED (the hole face acts as a
++                            // wall) instead of becoming a hole and seeding a
++                            // new front. Upstream behaviour cascades holes
++                            // through every donor-less cell, which wipes out
++                            // the mesh when gear teeth close the gap between
++                            // two overset meshes.
++                            allWeight[own] = 1.0;
+                         }
+                     }
+                 }
+@@ -1406,15 +1404,8 @@
+                             }
+                             else
+                             {
+-                                allWeight[nei] = 0.0;
+-                                allCellTypes[nei] = HOLE;
+-                                seedCell
+-                                (
+-                                    nei,
+-                                    1.0,
+-                                    newIsFront,
+-                                    newFraction
+-                                );
++                                // OA2IS patch: see owner branch above.
++                                allWeight[nei] = 1.0;
+                             }
+                         }
+                     }
+@@ -2194,6 +2185,34 @@
+     // Extend stencil to get inverse distance weighted neighbours
+     createStencil(globalCells);
+ 
++    // OA2IS patch: an acceptor whose candidate donors all became holes is left
++    // with an empty stencil (zero matrix diagonal -> NaN). Make it calculated.
++    {
++        label nFix = 0;
++        DynamicList<label> keep(interpolationCells_.size());
++        forAll(interpolationCells_, i)
++        {
++            const label celli = interpolationCells_[i];
++            if (cellStencil_[celli].empty())
++            {
++                cellTypes_[celli] = CALCULATED;
++                cellInterpolationWeight_[celli] = 0.0;
++                cellInterpolationWeights_[celli].clear();
++                ++nFix;
++            }
++            else
++            {
++                keep.append(celli);
++            }
++        }
++        if (returnReduce(nFix, sumOp<label>()))
++        {
++            interpolationCells_.transfer(keep);
++            Info<< typeName << " : " << returnReduce(nFix, sumOp<label>())
++                << " donor-less acceptors set to calculated" << endl;
++        }
++    }
++
+ 
+     if (debug&2)
+     {
