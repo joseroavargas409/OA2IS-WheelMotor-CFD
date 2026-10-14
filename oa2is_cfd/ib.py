@@ -197,7 +197,7 @@ def bodies_dict(gc: GearCase, sc: Scenario, backlash=None):
 {chr(10).join(prims)}
         }}
     }}''')
-    return 'penalty 1000;\ndisplaceOil true;\nsubSamples 2;\nbodies\n{\n' + '\n'.join(out) + '\n}'
+    return 'penalty 1000;\ndisplaceOil true;\nsubSamples 2;\ndisplacePasses 3;\nbodies\n{\n' + '\n'.join(out) + '\n}'
 
 
 def chi_at_rest(gc: GearCase, C):

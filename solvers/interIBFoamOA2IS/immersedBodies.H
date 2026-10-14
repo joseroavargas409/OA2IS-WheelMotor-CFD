@@ -174,6 +174,7 @@ class immersedBodies
     scalar penalty_;
     bool displaceOil_;
     label nSub_;
+    label nPass_;
     bool debug_;
     vectorField halfExt_;   // half extents of each cell bounding box
 
@@ -190,6 +191,7 @@ public:
         penalty_(dict_.getOrDefault<scalar>("penalty", 1000)),
         displaceOil_(dict_.getOrDefault<bool>("displaceOil", true)),
         nSub_(dict_.getOrDefault<label>("subSamples", 2)),
+        nPass_(dict_.getOrDefault<label>("displacePasses", 3)),
         debug_(dict_.getOrDefault<bool>("debug", false)),
         halfExt_(mesh.nCells(), Zero)
     {
@@ -206,7 +208,8 @@ public:
             halfExt_[ci] = 0.5*bb.span();
         }
         Info<< "immersedBodies: " << bodies_.size() << " bodies, penalty "
-            << penalty_ << ", oil displacement " << displaceOil_ << endl;
+            << penalty_ << ", oil displacement " << displaceOil_
+            << " (" << nPass_ << " passes)" << endl;
     }
 
     scalar penalty() const { return penalty_; }
@@ -321,7 +324,13 @@ public:
 
         if (!displaceOil_) return;
 
-        // conservative push-out of oil from cells newly covered by bodies
+        // Conservative push-out of oil (alpha stays bounded, total oil exact):
+        //  pass 0: the oil swept by the volume a body newly covers (dchi > 0)
+        //          plus any oil exceeding the free part (1 - chi) of a cell;
+        //  passes 1..nPass-1: remaining excess (oil that could not be placed
+        //          in the first pass, or leaked into partially covered cells by
+        //          advection) is moved again, one cell layer per pass.
+        // Receivers only take oil up to their free capacity (1 - chi - alpha).
         scalarField& a = alpha1.primitiveFieldRef();
         const scalarField& V = mesh_.V();
         const labelUList& own = mesh_.owner();
@@ -330,52 +339,75 @@ public:
         forAll(a, ci)
         {
             const scalar dchi = chiI[ci] - chiOld[ci];
+            scalar target = a[ci];
             if (dchi > 0 && a[ci] > 0)
             {
                 const scalar fluidBefore = max(1 - chiOld[ci], SMALL);
-                const scalar moved = min(a[ci], a[ci]*dchi/fluidBefore)*V[ci];
-                excess[ci] = moved;
-                a[ci] -= moved/V[ci];
+                target = max(0.0, a[ci]*(1 - dchi/fluidBefore));
             }
-        }
-        // capacity of receivers: empty fluid volume
-        scalarField cap(mesh_.nCells(), 0);
-        forAll(a, ci) { cap[ci] = max(0.0, (1 - chiI[ci]) - a[ci])*V[ci]; }
-        scalarField sumCap(mesh_.nCells(), 0);
-        forAll(own, f)
-        {
-            if (excess[own[f]] > 0) sumCap[own[f]] += cap[nei[f]];
-            if (excess[nei[f]] > 0) sumCap[nei[f]] += cap[own[f]];
-        }
-        // proposed transfers per face (donor -> receiver), then scaled so that
-        // no receiver gets more than its capacity; unsent oil stays put
-        scalarField mON(own.size(), 0), mNO(own.size(), 0), demand(mesh_.nCells(), 0);
-        forAll(own, f)
-        {
-            const label o = own[f], nb = nei[f];
-            if (excess[o] > 0 && sumCap[o] > VSMALL)
+            target = min(target, max(0.0, 1 - chiI[ci]));
+            if (target < a[ci])
             {
-                mON[f] = min(excess[o], sumCap[o])*cap[nb]/sumCap[o];
-                demand[nb] += mON[f];
+                excess[ci] = (a[ci] - target)*V[ci];
+                a[ci] = target;
             }
-            if (excess[nb] > 0 && sumCap[nb] > VSMALL)
+        }
+        for (label pass = 0; pass < nPass_; ++pass)
+        {
+            if (pass > 0)
             {
-                mNO[f] = min(excess[nb], sumCap[nb])*cap[o]/sumCap[nb];
-                demand[o] += mNO[f];
+                forAll(a, ci)
+                {
+                    const scalar free = max(0.0, 1 - chiI[ci]);
+                    if (a[ci] > free + SMALL)
+                    {
+                        excess[ci] = (a[ci] - free)*V[ci];
+                        a[ci] = free;
+                    }
+                }
             }
-        }
-        scalarField sc(mesh_.nCells(), 1.0), gain(mesh_.nCells(), 0), sent(mesh_.nCells(), 0);
-        forAll(sc, ci) { if (demand[ci] > cap[ci]) sc[ci] = cap[ci]/max(demand[ci], VSMALL); }
-        forAll(own, f)
-        {
-            const label o = own[f], nb = nei[f];
-            const scalar a1 = mON[f]*sc[nb], a2 = mNO[f]*sc[o];
-            gain[nb] += a1; sent[o] += a1;
-            gain[o] += a2;  sent[nb] += a2;
-        }
-        forAll(a, ci)
-        {
-            a[ci] += (gain[ci] + max(0.0, excess[ci] - sent[ci]))/V[ci];
+            if (gMax(excess) <= VSMALL) break;
+            // capacity of receivers: empty fluid volume
+            scalarField cap(mesh_.nCells(), 0);
+            forAll(a, ci) { cap[ci] = max(0.0, (1 - chiI[ci]) - a[ci])*V[ci]; }
+            scalarField sumCap(mesh_.nCells(), 0);
+            forAll(own, f)
+            {
+                if (excess[own[f]] > 0) sumCap[own[f]] += cap[nei[f]];
+                if (excess[nei[f]] > 0) sumCap[nei[f]] += cap[own[f]];
+            }
+            // proposed transfers per face (donor -> receiver), then scaled so
+            // that no receiver gets more than its capacity
+            scalarField mON(own.size(), 0), mNO(own.size(), 0), demand(mesh_.nCells(), 0);
+            forAll(own, f)
+            {
+                const label o = own[f], nb = nei[f];
+                if (excess[o] > 0 && sumCap[o] > VSMALL)
+                {
+                    mON[f] = min(excess[o], sumCap[o])*cap[nb]/sumCap[o];
+                    demand[nb] += mON[f];
+                }
+                if (excess[nb] > 0 && sumCap[nb] > VSMALL)
+                {
+                    mNO[f] = min(excess[nb], sumCap[nb])*cap[o]/sumCap[nb];
+                    demand[o] += mNO[f];
+                }
+            }
+            scalarField sc(mesh_.nCells(), 1.0), gain(mesh_.nCells(), 0), sent(mesh_.nCells(), 0);
+            forAll(sc, ci) { if (demand[ci] > cap[ci]) sc[ci] = cap[ci]/max(demand[ci], VSMALL); }
+            forAll(own, f)
+            {
+                const label o = own[f], nb = nei[f];
+                const scalar a1 = mON[f]*sc[nb], a2 = mNO[f]*sc[o];
+                gain[nb] += a1; sent[o] += a1;
+                gain[o] += a2;  sent[nb] += a2;
+            }
+            // unsent oil goes back to its donor (it is retried next pass)
+            forAll(a, ci)
+            {
+                a[ci] += (gain[ci] + max(0.0, excess[ci] - sent[ci]))/V[ci];
+            }
+            excess = 0;
         }
         alpha1.correctBoundaryConditions();
     }

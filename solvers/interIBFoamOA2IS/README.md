@@ -8,7 +8,8 @@ con un agregado de frontera inmersa para cuerpos rígidos en movimiento prescrit
 * `immersedBodies.H` — lee `constant/immersedBodiesDict`; en cada paso calcula la pose de cada
   cuerpo (integral exacta de las tablas ω(t) de órbita y giro propio), la fracción de sólido χ por
   celda (2×2×2 sub-puntos, perfiles exactos de evolvente en tabla polar), la velocidad de cuerpo
-  rígido U_s y desplaza de forma conservativa el aceite de las celdas que un cuerpo acaba de cubrir.
+  rígido U_s y desplaza de forma conservativa el aceite de las celdas que un cuerpo acaba de cubrir
+  (y el que exceda la fracción libre 1 − χ), manteniendo α acotado.
 * `createImmersedBodies.H` — campos `chi` y `Us` (se escriben con los resultados).
 * `interIBFoamOA2IS.C` — llama `ib.update(t, chi, Us, alpha1)` después de avanzar el tiempo.
 * `UEqn.H` — término implícito de penalización de Brinkman `ρ χ K/Δt (U_s − U)` (K = `penalty`).
@@ -19,6 +20,7 @@ Formato de `immersedBodiesDict` (generado por `oa2is_cfd/ib.py::bodies_dict`):
 penalty 1000;        // K
 displaceOil true;    // empujar el aceite fuera de las celdas que se cubren
 subSamples 2;        // n -> n^3 sub-puntos por celda para chi
+displacePasses 3;    // pasadas de redistribucion del aceite desplazado / en exceso
 bodies
 {
     planetHigh0

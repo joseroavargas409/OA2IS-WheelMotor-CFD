@@ -190,7 +190,9 @@ class Fields:
         fl = (1 - chi) * V
         gear = (r < GEAR_R) & (np.abs(C[:, 2] - STAGE_Z['High']) < 0.06) | \
                (r < GEAR_R) & (np.abs(C[:, 2] - STAGE_Z['Low']) < 0.06)
-        res = dict(t=t, oil_L=oil.sum() * 1e3, oil_in_bodies_L=(oil * chi).sum() * 1e3,
+        res = dict(t=t, oil_L=oil.sum() * 1e3,
+                   # oil exceeding the free (1 - chi) part of partially covered cells
+                   oil_excess_in_bodies_L=float((np.maximum(0.0, a - (1 - chi)) * V).sum() * 1e3),
                    fluid_L=fl.sum() * 1e3)
         tot = oil.sum()
         for k, c in zip('xyz', C.T):

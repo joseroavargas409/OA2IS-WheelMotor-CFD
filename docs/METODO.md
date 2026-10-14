@@ -25,10 +25,13 @@ aceleración del camión entran como gravedad efectiva g − a(t).
   ecuación es la de `interFoam`. Es un acoplamiento **mecánico real**: el aceite solo se mueve porque
   los cuerpos lo empujan y lo arrastran a través de la presión y la viscosidad (no hay fuerzas
   artificiales sobre el aceite, ni MRF, ni rotación "visual").
-* **Desplazamiento conservativo del aceite**: cuando un cuerpo entra en una celda que contiene
-  aceite, ese aceite se redistribuye a las celdas vecinas libres (transferencias por cara,
-  ponderadas por capacidad), de modo que el volumen de aceite total se conserva y los cuerpos no
-  "absorben" aceite. El inventario se verifica cada paso (`postProcessing/oilVolume`).
+* **Desplazamiento conservativo del aceite**: en cada paso, el aceite del volumen que un cuerpo acaba
+  de cubrir (Δχ > 0) y cualquier aceite que exceda la parte libre (1 − χ) de una celda se reparte entre
+  las celdas vecinas con capacidad libre (1 − χ − α), en hasta `displacePasses` pasadas. Así α queda
+  acotado, el volumen total de aceite se conserva exactamente y los cuerpos no "absorben" aceite.
+  Lo que la advección VOF de un paso alcanza a meter en celdas parcialmente cubiertas se devuelve en
+  el paso siguiente (≈ 1 L de los 95 L en la malla `ib_test`, ver `oil_excess_in_bodies_L`).
+  El inventario se verifica cada paso (`postProcessing/oilVolume`).
 
 Paredes ajustadas a malla: spindle y cuerpos de las coronas (fijas, `noSlip`); cubo, tapa, anillo del
 porta bajo, eje del rotor y manguito intermedio (superficies de revolución que giran con su
