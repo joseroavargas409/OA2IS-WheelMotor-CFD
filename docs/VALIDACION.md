@@ -148,7 +148,36 @@ base registrada antes de empezar (`docs/integrity/`):
 
 Ningún repositorio original fue modificado (ni localmente ni en GitHub).
 
-## 9. Limitaciones
+## 9. Corrida representativa con sensores de aceite/aire (`rep_02_test`)
+
+Continuación del caso nominal (02, malla ib_test, 20 km/h) desde 0,25 s hasta **0,554 s**
+(2 procesos MPI, 52 min de cálculo, 2 778 pasos) con los **20 sensores capacitivos** de
+`docs/SENSORES.md` registrados en cada paso (180 puntos). Se eligió la malla ib_test porque las
+magnitudes globales que leen los sensores no cambian con la malla (§5) y así se alcanzan 0,55 s de
+tiempo físico en una hora; la malla media llegaba a ~0,2 s.
+
+| t [s] | aceite sobre el eje | fracción mojada engranajes | velocidad media del aceite | aceite en celdas de cuerpos |
+|---|---|---|---|---|
+| 0,25 | 7,2 % | 0,154 | 0,75 m/s | 3,2 L |
+| 0,35 | 7,9 % | 0,162 | 0,79 m/s | 2,7 L |
+| 0,45 | 9,3 % | 0,156 | 0,85 m/s | 3,8 L |
+| 0,554 | 11,3 % | 0,141 | 0,89 m/s | 4,9 L |
+
+Inventario: deriva máxima 4,9 × 10⁻⁴ % en 0,554 s. El aceite sigue siendo levantado por los
+engranajes (todavía no hay régimen estacionario a 0,55 s).
+
+Lo que leen los sensores (fracción del tiempo entre 0,05 y 0,554 s; `oil_sensors_summary.csv`):
+* siempre mojados: S3 (fondo bolsillo tapa), S7 (fondo anillo corona alta), V3 (fondo del cárter),
+  V7 (canal central inferior), V10 (zona de salida);
+* pasan de mojado a mixto a medida que el aceite es arrastrado: S1 (fondo etapa alta, desde 0,18 s),
+  S2, S5 y S6 (laterales entre etapas, desde ~0,40 s) — el nivel junto a las paredes baja porque el
+  aceite queda girando con los engranajes;
+* salpicadura intermitente: S4 (superior etapa alta: seco → mixto desde 0,40 s), V5, V9;
+* siempre secos (aire): S8, V2, V4, V6, V8, V11, V12.
+Ninguno quedó «no disponible»: los volúmenes sensibles de V1–V12 no fueron cubiertos por un
+engranaje en esta corrida.
+
+## 10. Limitaciones
 
 1. **Resolución del engrane**: 1,5–2 celdas por diente (ib_test/ib_mid). El arrastre global del aceite
    está convergido (§5), el flujo dentro del engrane no. Velocidades locales de hasta 30–150 m/s en el

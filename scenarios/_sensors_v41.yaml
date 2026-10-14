@@ -1,0 +1,15 @@
+# Sondas de komatsu-oil-sensors-v4-1 (dashboard/constants.js, MIT) llevadas al marco del modelo CFD:
+#   x_cfd = x_v41, y_cfd = z_v41 (vertical), z_cfd = -1.3135 + 0.9356*y_v41 (axial; +y_v41 = etapa alta).
+# Las que caen dentro de piezas fijas se reubicaron al centro de celda de fluido mas cercano.
+- {id: V1, name: "V4.1 S1 Retorno de alta (etapa Alta)", position: [-0.2434, -0.2384, -1.0195], source: "reubicado 15 mm al fluido más cercano"}
+- {id: V2, name: "V4.1 S2 Lateral de baja (etapa Baja)", position: [0.3350, -0.1600, -1.6222], source: "posición V4.1 transformada"}
+- {id: V3, name: "V4.1 S3 Fondo del cárter (etapa Común)", position: [0.0000, -0.4050, -1.3135], source: "posición V4.1 transformada"}
+- {id: V4, name: "V4.1 S4 Espacio superior (etapa Común)", position: [0.0000, 0.2200, -1.3135], source: "posición V4.1 transformada"}
+- {id: V5, name: "V4.1 S5 Lateral de alta (etapa Alta)", position: [0.3533, -0.1371, -1.0195], source: "reubicado 15 mm al fluido más cercano"}
+- {id: V6, name: "V4.1 S6 Retorno de baja (etapa Baja)", position: [-0.3350, -0.1600, -1.6222], source: "posición V4.1 transformada"}
+- {id: V7, name: "V4.1 S7 Canal central inferior (etapa Común)", position: [-0.1200, -0.2800, -1.3135], source: "posición V4.1 transformada"}
+- {id: V8, name: "V4.1 S8 Canal central superior (etapa Común)", position: [0.1300, 0.1000, -1.3135], source: "posición V4.1 transformada"}
+- {id: V9, name: "V4.1 S9 Zona de entrada (etapa Alta)", position: [0.0058, -0.2531, -1.0195], source: "reubicado 62 mm al fluido más cercano"}
+- {id: V10, name: "V4.1 S10 Zona de salida (etapa Baja)", position: [0.0000, -0.2500, -1.6690], source: "posición V4.1 transformada"}
+- {id: V11, name: "V4.1 S11 Salpicadura superior derecha (etapa Común)", position: [0.2100, 0.2000, -1.3135], source: "posición V4.1 transformada"}
+- {id: V12, name: "V4.1 S12 Salpicadura superior izquierda (etapa Común)", position: [-0.2100, 0.2000, -1.3135], source: "posición V4.1 transformada"}

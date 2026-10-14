@@ -81,6 +81,7 @@ Las variables de entorno de OpenFOAM que necesita el paquete Debian están en
 | Pendiente 10 % + peralte 4° | pozo de aceite girado −5,2° (cuasi-estático −5,7°), S5 seco / S6 mojado |
 | Frenado −3 m/s² | pozo de aceite gira hacia adelante (+4,7° en 0,25 s, hacia +17° cuasi-estático) |
 | 55 L | S5/S6 secos, estados ALERTA; mojado de engranajes cae a la mitad |
+| Corrida representativa con sensores | nominal continuado hasta 0,554 s con 20 sensores capacitivos (modelo de komatsu-oil-sensors-v4-1): `results/rep_02_test/` y `docs/SENSORES.md` |
 | Limitación principal | dientes con 1,5–2 celdas: flujo dentro del engrane no resuelto; 1,7–4,3 L quedan en celdas de cuerpos |
 
 Por caso en `results/<caso>/`: `sensors.csv|parquet` (S1–S8 cada paso: α, presencia, U, p, p_rgh),

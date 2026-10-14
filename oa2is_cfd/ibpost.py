@@ -103,21 +103,26 @@ def sensors(case: Path, sc: Scenario | None = None, wet=0.5) -> pd.DataFrame:
     case = Path(case)
     sc = sc or load_scenario(case)
     dirs = sorted(case.glob('postProcessing/sensors/*'), key=lambda p: float(p.name))
+    # a case prepared for the capacitive sensors records 9 points per sensor
+    # (sensor_layout.json); the centre point (offset 0) is the sensor position
+    lay = case / 'sensor_layout.json'
+    stride = len(json.loads(lay.read_text())['offsets']) if lay.exists() else 1
     out = []
     for d in dirs:
-        hdr = (d / 'alpha.oil').read_text().splitlines()
-        found = [i for i, l in enumerate(l for l in hdr if l.startswith('# Probe') and '(' in l)
-                 if 'Not Found' not in hdr[i]]
-        probes = [l for l in hdr if l.startswith('# Probe') and '(' in l]
-        ok = [i for i, l in enumerate(probes) if 'Not Found' not in l]
+        hdr = [l for l in (d / 'alpha.oil').read_text().splitlines() if l.startswith('# Probe') and '(' in l]
+        ok = [i for i, l in enumerate(hdr) if 'Not Found' not in l]
         a = _probe_file(d / 'alpha.oil', 1)
         U = _probe_file(d / 'U', 3)
         p = _probe_file(d / 'p', 1)
         prgh = _probe_file(d / 'p_rgh', 1)
         chi = _probe_file(d / 'chi', 1) if (d / 'chi').exists() else None
         n = min(len(a), len(U), len(p), len(prgh))
-        for k, i in enumerate(ok):
-            s = sc.sensors[i]
+        allcols = a.shape[1] == 1 + len(hdr)          # OpenFOAM writes every probe column
+        for si, s in enumerate(sc.sensors):
+            i = si * stride
+            if i not in ok:
+                continue
+            k = i if allcols else ok.index(i)
             u = U[:n, 1 + 3 * k:4 + 3 * k]
             df = pd.DataFrame(dict(t=a[:n, 0], sensor=s['id'], name=s['name'],
                                    x=s['position'][0], y=s['position'][1], z=s['position'][2],
@@ -125,7 +130,6 @@ def sensors(case: Path, sc: Scenario | None = None, wet=0.5) -> pd.DataFrame:
                                    p=p[:n, 1 + k], p_rgh=prgh[:n, 1 + k],
                                    chi=(chi[:n, 1 + k] if chi is not None and len(chi) >= n else np.nan)))
             out.append(df)
-        del found
     df = pd.concat(out).drop_duplicates(['t', 'sensor'], keep='last').sort_values(['t', 'sensor'])
     df['U_mag'] = np.sqrt(df.Ux ** 2 + df.Uy ** 2 + df.Uz ** 2)
     df['oil_present'] = df.alpha > wet

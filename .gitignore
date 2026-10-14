@@ -8,3 +8,4 @@ cases/*/
 *.foam
 processor*/
 results/*/frames3d/
+results/*/frames_sensores/

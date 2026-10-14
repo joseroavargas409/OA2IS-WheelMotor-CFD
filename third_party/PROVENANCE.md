@@ -42,3 +42,12 @@ bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601  third_party/wh
 Las copias no se modificaron. Todo cambio (reparaciones geométricas, regeneración de dientes)
 se hace en código nuevo (`oa2is_cfd/model.py`, `oa2is_cfd/gears.py`) y está documentado en
 `docs/GEOMETRIA.md`.
+
+## Traducciones (código derivado)
+
+* `oa2is_cfd/oil_sensor.py` es una traducción a Python del modelo capacitivo de
+  `third_party/komatsu-oil-sensors-v4-1/sensor-model.js` (MIT, © 2026 OA2IS simulation contributors):
+  capacitancia coaxial, película residual, filtro de 0,08 s, ruido xorshift32 con las mismas semillas,
+  estados seco/mixto/mojado/no disponible. Verificada contra el original (mismos valores).
+* `scenarios/_sensors_v41.yaml` transforma las 12 posiciones de `PROBES` de
+  `third_party/komatsu-oil-sensors-v4-1/constants.js` al marco del modelo CFD (`docs/SENSORES.md`).

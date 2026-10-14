@@ -65,18 +65,37 @@ def _panel(ax, m, normal, origin, axes, title, xlim, ylim, quiver=False):
     ax.tick_params(labelsize=7)
 
 
-def render_frame(F: Fields, t: float, out: Path, sc=None, oil_L=None, quiver=True, dpi=110):
+STATE_COLOR = {'wet': '#08306b', 'mixed': '#6baed6', 'dry': '#fdd49e', 'unavailable': '#7f7f7f'}
+
+
+def _sensors(ax, sensors, axes, sel):
+    """Draw sensors [(id, (x, y, z), state)] whose coordinate sel(pos) is True."""
+    for sid, pos, state in sensors:
+        if not sel(pos):
+            continue
+        u, v = pos[axes[0]], pos[axes[1]]
+        ax.scatter([u], [v], s=46, marker='o', c=STATE_COLOR.get(state, 'w'), edgecolors='#d7301f', linewidths=1.4,
+                   zorder=5)
+        ax.annotate(sid, (u, v), xytext=(4, 3), textcoords='offset points', fontsize=6.5, color='#d7301f', zorder=6)
+
+
+def render_frame(F: Fields, t: float, out: Path, sc=None, oil_L=None, quiver=True, dpi=110, sensors=None):
     m = F.mesh(t)
     sc = sc or load_scenario(F.case)
     fig = plt.figure(figsize=(14, 5.6))
     gs = fig.add_gridspec(1, 3, width_ratios=[1, 1, 1.45])
     lim = (-0.55, 0.55)
-    _panel(fig.add_subplot(gs[0]), m, 'z', (0, 0, STAGE_Z['High'] + 0.002), (0, 1),
+    ax0, ax1, ax2 = fig.add_subplot(gs[0]), fig.add_subplot(gs[1]), fig.add_subplot(gs[2])
+    _panel(ax0, m, 'z', (0, 0, STAGE_Z['High'] + 0.002), (0, 1),
            'Etapa alta (z = -1.13 m), vista desde interior', lim, lim, quiver)
-    _panel(fig.add_subplot(gs[1]), m, 'z', (0, 0, STAGE_Z['Low'] + 0.002), (0, 1),
+    _panel(ax1, m, 'z', (0, 0, STAGE_Z['Low'] + 0.002), (0, 1),
            'Etapa baja (z = -1.49 m)', lim, lim, quiver)
-    _panel(fig.add_subplot(gs[2]), m, 'x', (0.0005, 0, 0), (2, 1),
+    _panel(ax2, m, 'x', (0.0005, 0, 0), (2, 1),
            'Corte axial x = 0 (z horizontal, y vertical)', (-1.75, -0.98), lim, quiver)
+    if sensors:
+        _sensors(ax0, sensors, (0, 1), lambda p: p[2] > -1.31)
+        _sensors(ax1, sensors, (0, 1), lambda p: p[2] <= -1.31)
+        _sensors(ax2, sensors, (2, 1), lambda p: abs(p[0]) < 0.07)
     rpm = np.interp(t, [r[0] for r in sc.motor_rpm], [r[1] for r in sc.motor_rpm]) \
         if sc.mechanisms != 'stopped' else 0.0
     acc = np.interp(t, [r[0] for r in sc.accel], [r[1] for r in sc.accel])
@@ -90,8 +109,10 @@ def render_frame(F: Fields, t: float, out: Path, sc=None, oil_L=None, quiver=Tru
     cb = fig.colorbar(sm, ax=fig.axes, fraction=0.015, pad=0.01)
     cb.set_label('fraccion de aceite alpha', fontsize=8)
     fig.text(0.01, 0.01, 'OA2IS-WheelMotor-CFD | OpenFOAM v1912 interIBFoamOA2IS (VOF + frontera inmersa) | '
-             'gris oscuro: engranajes/porta-satelites moviles; gris claro: solidos fijos; flechas: U en aceite',
-             fontsize=7)
+             'gris oscuro: engranajes/porta-satelites moviles; gris claro: solidos fijos; flechas: U en aceite'
+             + ('\ncirculos: sensores capacitivos (relleno: azul mojado, celeste mixto, crema seco, gris no disp.); '
+                'etapa alta = sensores con z > -1.31, etapa baja = resto' if sensors else ''),
+             fontsize=6.5)
     fig.savefig(out, dpi=dpi)
     plt.close(fig)
 
