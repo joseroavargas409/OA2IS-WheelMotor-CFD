@@ -214,6 +214,56 @@ def chi_at_rest(gc: GearCase, C):
     return chi
 
 
+# ------------------------------------------------------------- sensors
+# 9-point sensitive volume of the capacitive electrode of komatsu-oil-sensors-v4-1
+# (centre, +-6 mm across, +-6.25 / +-12.5 mm along the electrode axis)
+def electrode_stencil(axis: int):
+    """Offsets [9][3] of the electrode volume with its long axis along `axis`
+    (0 = x, 1 = y vertical, 2 = z wheel axis); the two cross axes get +-6 mm."""
+    cross = [k for k in range(3) if k != axis]
+    out = [[0.0, 0.0, 0.0]]
+    for k in cross:
+        for s in (1, -1):
+            o = [0.0, 0.0, 0.0]; o[k] = 0.006 * s; out.append(o)
+    for d in (0.0125, -0.0125, 0.00625, -0.00625):
+        o = [0.0, 0.0, 0.0]; o[axis] = d; out.append(o)
+    return out
+
+
+def plug_ring(spec: dict):
+    """Probe ring for sensors fixed to a rotating part (e.g. the magnetic plugs
+    of the hub cover). The ring is fixed in space; post-processing picks, at
+    each time, the ring angle where the plug is (rest angle + part rotation)."""
+    n = int(spec.get('n_ring', 120))
+    ang = np.arange(n) * 2 * math.pi / n
+    r, z = spec['radius'], spec['z']
+    off = electrode_stencil({'x': 0, 'y': 1, 'z': 2}[spec.get('electrode_axis', 'z')])
+    centres = np.c_[r * np.cos(ang), r * np.sin(ang), np.full(n, z)]
+    pts = [[float(c[i] + o[i]) for i in range(3)] for c in centres for o in off]
+    return ang, off, pts
+
+
+def sensor_probes(case: Path, sc: Scenario):
+    """probes function objects: fixed sensors (1 point, or the 9-point electrode
+    volume when sc.capacitive_stencil) and one ring per rotating sensor group.
+    Writes sensor_layout.json describing every recorded point."""
+    off = electrode_stencil(1) if sc.capacitive_stencil else [[0.0, 0.0, 0.0]]
+    pts = [[s['position'][i] + o[i] for i in range(3)] for s in sc.sensors for o in off]
+    objs = ['    sensors { type probes; fields (alpha.oil U p p_rgh chi); writeControl timeStep; writeInterval 1;',
+            '              probeLocations (%s); }' % ' '.join(foam.vec(p) for p in pts)]
+    layout = dict(sensors=sc.sensors, offsets=off, points=pts, rotating=[])
+    for g in sc.rotating_sensors:
+        ang, roff, rpts = plug_ring(g)
+        name = 'ring_' + g['group']
+        objs += ['    %s { type probes; fields (alpha.oil chi); writeControl timeStep; writeInterval 1;' % name,
+                 '              probeLocations (%s); }' % ' '.join(foam.vec(p) for p in rpts)]
+        layout['rotating'].append(dict(g, function_object=name, ring_angles=list(map(float, ang)),
+                                       offsets=roff, points=rpts))
+    if sc.capacitive_stencil or sc.rotating_sensors:
+        (Path(case) / 'sensor_layout.json').write_text(json.dumps(layout, indent=1))
+    return objs
+
+
 # ------------------------------------------------------------- case
 def write_ib_case(case: Path, mesh_dir: Path, sc: Scenario, gc: GearCase):
     from .case import ROT_WALLS, _table, patch_names
@@ -266,7 +316,7 @@ sigma {sc.sigma:g};''')
     foam.write(case, 'constant/fvOptions', 'vehicleAcceleration\n{\n    type tabulatedAccelerationSource;\n    active yes;\n'
                                            '    timeDataFileName "constant/acceleration-terms.dat";\n}')
     foam.write(case, 'constant/immersedBodiesDict', bodies_dict(gc, sc, None))
-    probes = ' '.join(foam.vec(s['position']) for s in sc.sensors)
+    probe_objs = sensor_probes(case, sc)
     foam.write(case, 'system/controlDict', '\n'.join([
         'application interIBFoamOA2IS;', 'libs ("libfvOptions.so" "libsampling.so" "libfieldFunctionObjects.so");',
         'startFrom latestTime;', 'startTime 0;', 'stopAt endTime;', f'endTime {sc.duration:g};', 'deltaT 1e-4;',
@@ -278,8 +328,7 @@ sigma {sc.sigma:g};''')
         '    oilVolume { type volFieldValue; fields (alpha.oil); operation volIntegrate; regionType all;',
         '                writeFields false; writeControl timeStep; writeInterval 1; log false; }',
         '    extremes { type fieldMinMax; fields (U alpha.oil chi); writeControl timeStep; writeInterval 1; log false; }',
-        f'    sensors {{ type probes; fields (alpha.oil U p p_rgh chi); writeControl timeStep; writeInterval 1;',
-        f'              probeLocations ({probes}); }}',
+        *probe_objs,
         '}']))
     foam.write(case, 'system/fvSchemes', '''ddtSchemes { default Euler; }
 gradSchemes { default Gauss linear; }
@@ -333,6 +382,12 @@ def initial_oil_ib(case: Path, sc: Scenario, gc: GearCase):
     chi = chi_at_rest(gc, C)
     # level from the actual mesh (exact inventory in the discrete fluid volume)
     h = np.cbrt(V)
+    if getattr(sc, 'oil_level_y_flat', None) is not None:
+        # inventory defined by a measured level (e.g. the level-check plugs) on
+        # level ground at rest: litres = fluid volume below y = oil_level_y_flat
+        yv = C[:, 1]
+        sc.oil_litres = float(np.sum(np.clip(0.5 - (yv - sc.oil_level_y_flat) / h, 0, 1) * (~chi) * V)) * 1e3
+        level = gc.level_for_volume(sc.oil_litres, normal=n)
     proj = C @ n
     vol = lambda L: float(np.sum(np.clip(0.5 - (proj - L) / h, 0, 1) * (~chi) * V))
     lo, hi = proj.min() - 0.05, proj.max() + 0.05
@@ -348,6 +403,12 @@ def initial_oil_ib(case: Path, sc: Scenario, gc: GearCase):
     (case / '0/alpha.oil').write_text(t)
     cd.write_text(txt)
     meta = dict(level=float(level), level_geometric=float(level_geom), up=list(map(float, n)), litres=sc.oil_litres,
+                oil_level_y_flat=getattr(sc, 'oil_level_y_flat', None),
                 oil_in_field_L=float(np.sum(alpha * V) * 1e3), fluid_L=float(np.sum(V * (~chi)) * 1e3))
     (case / 'initial_oil.json').write_text(json.dumps(meta, indent=1))
+    sj = case / 'scenario.json'
+    if sj.exists():                       # keep scenario.json consistent with a level-defined inventory
+        d = json.loads(sj.read_text())
+        d['oil_litres'] = sc.oil_litres
+        sj.write_text(json.dumps(d, indent=1, default=float))
     return meta

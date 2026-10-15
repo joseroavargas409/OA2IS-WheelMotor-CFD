@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Cut-plane frames + MP4 with the oil/air sensors drawn in their state.
 
-usage: python3 tools/render_with_sensors.py <oil_sensors.csv> <out_dir> <case> [<case> ...]
+usage: python3 tools/render_with_sensors.py <oil_sensors.csv> <out_dir> <case> [<case> ...] [--plugs plug_sensors.csv]
+--plugs: also draw the hub-cover plug sensors (positions rotate with the hub) in an
+extra panel cut parallel to the hub cover.
 Cases are concatenated in time (e.g. the original run and its continuation):
 for each case only the written times before the next case starts are used.
 """
@@ -18,7 +20,13 @@ from oa2is_cfd.render import make_mp4, render_frame             # noqa: E402
 
 
 def main():
-    csv, out, cases = Path(sys.argv[1]), Path(sys.argv[2]), [Path(c) for c in sys.argv[3:]]
+    args = sys.argv[1:]
+    plugs = None
+    if '--plugs' in args:
+        i = args.index('--plugs')
+        plugs = pd.read_csv(args[i + 1])
+        del args[i:i + 2]
+    csv, out, cases = Path(args[0]), Path(args[1]), [Path(c) for c in args[2:]]
     out.mkdir(parents=True, exist_ok=True)
     for f in out.glob('frame_*.png'):
         f.unlink()
@@ -38,8 +46,15 @@ def main():
             tk = ts[ts <= t + 1e-9].max() if (ts <= t + 1e-9).any() else ts.min()
             st = df[np.isclose(df.t, tk)].set_index('sensor').state
             sensors = [(s, tuple(pos.loc[s]), st.get(s, 'unavailable')) for s in pos.index]
+            extra = {}
+            if plugs is not None:
+                pt = np.sort(plugs.t.unique())
+                tp = pt[np.argmin(np.abs(pt - t))]
+                g = plugs[plugs.t == tp]
+                sensors += [(r.sensor, (r.x, r.y, r.z), r.state) for r in g.itertuples()]
+                extra = dict(cover_z=float(g.z.iloc[0]), hub_angle_deg=float(g.hub_angle_deg.iloc[0]))
             render_frame(f, t, out / f'frame_{k:04d}.png', sc,
-                         oil_L=float(np.interp(t, oils.t, oils.oil_L)), sensors=sensors)
+                         oil_L=float(np.interp(t, oils.t, oils.oil_L)), sensors=sensors, **extra)
             k += 1
     make_mp4(out, out.parent / 'animation_sensores.mp4', fps=8)
     print(k, 'frames')

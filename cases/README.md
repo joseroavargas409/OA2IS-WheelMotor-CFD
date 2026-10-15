@@ -20,3 +20,9 @@ Regenerar el caso completo:
 python3 tools/build_ib_case.py scenarios/02_operacion_normal.yaml cases/c02 --mesh cases/mesh_ib_test --res ib_test
 SOLVER=/opt/oa2is-openfoam-patches/bin/interIBFoamOA2IS tools/run_case.sh cases/c02 1
 ```
+
+`real_07_acarreo_tapones/` es el caso del ciclo real (acarreo típico, 681 rpm, +1,6 %) con el aceite al
+nivel de los tapones y los 28 sensores: `system/controlDict` incluye las sondas de los 20 sensores
+fijos (9 puntos cada uno) y el anillo `ring_hub_cover_plugs` (120 posiciones × 9 puntos) del que
+`tools/plug_sensors.py` obtiene los sensores P1–P8 que giran con la maza; `sensor_layout.json`
+describe todos los puntos.

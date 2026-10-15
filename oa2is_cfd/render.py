@@ -79,13 +79,28 @@ def _sensors(ax, sensors, axes, sel):
         ax.annotate(sid, (u, v), xytext=(4, 3), textcoords='offset points', fontsize=6.5, color='#d7301f', zorder=6)
 
 
-def render_frame(F: Fields, t: float, out: Path, sc=None, oil_L=None, quiver=True, dpi=110, sensors=None):
+def render_frame(F: Fields, t: float, out: Path, sc=None, oil_L=None, quiver=True, dpi=110, sensors=None,
+                 cover_z=None, hub_angle_deg=None):
+    """cover_z: add a 4th panel, a cut parallel to the hub cover at z = cover_z
+    (sensors with z < -1.70 are drawn there: the hub-cover plugs)."""
     m = F.mesh(t)
     sc = sc or load_scenario(F.case)
-    fig = plt.figure(figsize=(14, 5.6))
-    gs = fig.add_gridspec(1, 3, width_ratios=[1, 1, 1.45])
     lim = (-0.55, 0.55)
-    ax0, ax1, ax2 = fig.add_subplot(gs[0]), fig.add_subplot(gs[1]), fig.add_subplot(gs[2])
+    if cover_z is None:
+        fig = plt.figure(figsize=(14, 5.6))
+        gs = fig.add_gridspec(1, 3, width_ratios=[1, 1, 1.45])
+    else:
+        fig = plt.figure(figsize=(18.5, 5.6))
+        gs = fig.add_gridspec(1, 4, width_ratios=[1, 1, 1, 1.45])
+    ax0, ax1 = fig.add_subplot(gs[0]), fig.add_subplot(gs[1])
+    if cover_z is not None:
+        ax3 = fig.add_subplot(gs[2])
+        _panel(ax3, m, 'z', (0, 0, cover_z), (0, 1),
+               'Tapa de maza (z = %.3f m): tapones' % cover_z
+               + ('' if hub_angle_deg is None else ', maza girada %.1f deg' % hub_angle_deg), lim, lim, quiver)
+        if sensors:
+            _sensors(ax3, sensors, (0, 1), lambda p: p[2] < -1.70)
+    ax2 = fig.add_subplot(gs[-1])
     _panel(ax0, m, 'z', (0, 0, STAGE_Z['High'] + 0.002), (0, 1),
            'Etapa alta (z = -1.13 m), vista desde interior', lim, lim, quiver)
     _panel(ax1, m, 'z', (0, 0, STAGE_Z['Low'] + 0.002), (0, 1),
@@ -94,7 +109,7 @@ def render_frame(F: Fields, t: float, out: Path, sc=None, oil_L=None, quiver=Tru
            'Corte axial x = 0 (z horizontal, y vertical)', (-1.75, -0.98), lim, quiver)
     if sensors:
         _sensors(ax0, sensors, (0, 1), lambda p: p[2] > -1.31)
-        _sensors(ax1, sensors, (0, 1), lambda p: p[2] <= -1.31)
+        _sensors(ax1, sensors, (0, 1), lambda p: -1.70 <= p[2] <= -1.31)
         _sensors(ax2, sensors, (2, 1), lambda p: abs(p[0]) < 0.07)
     rpm = np.interp(t, [r[0] for r in sc.motor_rpm], [r[1] for r in sc.motor_rpm]) \
         if sc.mechanisms != 'stopped' else 0.0

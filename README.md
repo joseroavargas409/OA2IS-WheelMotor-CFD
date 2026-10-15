@@ -8,8 +8,10 @@ Proyecto OA²IS — Hack the Challenge 2026 (NTT DATA × Komatsu).
 
 ![geometría](docs/img/geometria_cfd.png)
 
-**Estado: funcional.** Se ejecutaron 5 escenarios + estudios de sensibilidad de malla y de paso de
-tiempo con el solver real; resultados, sensores y videos en `results/`. Lo que el modelo resuelve
+**Estado: funcional.** Se ejecutaron 9 escenarios (4 de ellos calibrados con datos reales de
+operación: rpm medida, nivel de aceite por los tapones de la tapa de maza, pendientes y velocidades
+del ciclo de acarreo) + estudios de sensibilidad de malla y de paso de tiempo con el solver real;
+resultados, 28 sensores de aceite/aire y videos en `results/`. Lo que el modelo resuelve
 bien y lo que no está en [`docs/VALIDACION.md`](docs/VALIDACION.md).
 
 ## Qué hay aquí
@@ -21,7 +23,7 @@ bien y lo que no está en [`docs/VALIDACION.md`](docs/VALIDACION.md).
 | `oa2is_cfd/` | Biblioteca Python: engranajes (`gears.py`), cinemática (`kinematics.py`), geometría del dominio y reparaciones (`model.py`), mallador 2,5D (`layered.py`), casos de frontera inmersa (`ib.py`), escenarios (`scenario.py`), post-proceso (`ibpost.py`), render (`render.py`); y la vía overset investigada (`meshing.py`, `case.py`, `post.py`) |
 | `solvers/` | `interIBFoamOA2IS` (producción: VOF + cuerpos inmersos en movimiento) y `overInterDyMFoamOA2IS` (alternativa overset) |
 | `patches/` | Parches a OpenFOAM v1912 (functionObjects con GCC 13, overset, **error de compilación GCC 13 `__restrict__`**) |
-| `scenarios/` | 5 escenarios YAML (generados por `tools/make_scenarios.py`) y sensores virtuales |
+| `scenarios/` | 9 escenarios YAML (generados por `tools/make_scenarios.py`; 06–09 del ciclo real) y sensores virtuales |
 | `tools/` | Compilar OpenFOAM parcheado, construir casos, correr, post-procesar, comparar, exportar geometría |
 | `tests/` | Engranajes sin interferencia, cinemática en OpenFOAM, posición de los cuerpos dentro de la solución CFD |
 | `cases/` | Diccionarios exactos de un caso corrido (referencia) |
@@ -59,6 +61,10 @@ tools/run_queue.sh 1 runs/c01 runs/c02 ...
 
 # 7. post-proceso: sensores CSV/Parquet, inventario, gráficos, fotogramas y MP4
 python3 tools/postprocess.py runs/c02 --mp4
+#    escenarios 06-09: sensores capacitivos fijos y en los tapones de la tapa de maza (giran con la maza)
+python3 tools/oil_sensors.py runs/c07 && python3 tools/plug_sensors.py runs/c07
+python3 tools/render_with_sensors.py results/c07/oil_sensors.csv runs/c07_frames runs/c07 --plugs results/c07/plug_sensors.csv
+python3 tools/compare_real.py                     # tabla y figura de 06-09
 python3 tests/test_ib_motion.py runs/c02         # cuerpos en la pose analítica dentro de la solución
 python3 tools/compare.py                          # figuras y números de validación
 ```
@@ -68,7 +74,7 @@ Las variables de entorno de OpenFOAM que necesita el paquete Debian están en
 
 ## Resultados (resumen)
 
-7 corridas reales (5 escenarios en la malla `ib_test`, 146 k celdas; sensibilidad de malla con
+11 corridas reales (9 escenarios en la malla `ib_test`, 146 k celdas; sensibilidad de malla con
 `ib_mid`, 477 k; sensibilidad de paso de tiempo con Co_max 0,5). Detalle y figuras en
 [`docs/VALIDACION.md`](docs/VALIDACION.md).
 
@@ -82,12 +88,18 @@ Las variables de entorno de OpenFOAM que necesita el paquete Debian están en
 | Frenado −3 m/s² | pozo de aceite gira hacia adelante (+4,7° en 0,25 s, hacia +17° cuasi-estático) |
 | 55 L | S5/S6 secos, estados ALERTA; mojado de engranajes cae a la mitad |
 | Corrida representativa con sensores | nominal continuado hasta 0,554 s con 20 sensores capacitivos (modelo de komatsu-oil-sensors-v4-1): `results/rep_02_test/` y `docs/SENSORES.md` |
+| Ciclo real (06–09) | 94,5 L al nivel de los tapones; acarreo 14 km/h / subida cargado 10 km/h +7,8 % / bajada 20,5 km/h −6 % con retardo: aceite sobre el eje 5,4 / 3,6 / 7,1 %, pozo inclinado −5,8 / −8,3 / −0,9°; el arco mojado del círculo de tapones da el nivel con ±4 mm (`docs/VALIDACION.md` §10) |
+| Sensores en los tapones | P1–P8 en los puertos de la tapa de maza, giran con ella; en reposo los tapones de nivel (240°/300°) quedan en la superficie libre, como pide la guía de Komatsu (`docs/SENSORES.md`) |
 | Limitación principal | dientes con 1,5–2 celdas: flujo dentro del engrane no resuelto; 1,7–4,3 L quedan en celdas de cuerpos |
 
 Por caso en `results/<caso>/`: `sensors.csv|parquet` (S1–S8 cada paso: α, presencia, U, p, p_rgh),
 `system_state.csv|parquet`, `inventory.csv`, `log_history.csv` (Δt, Courant, residuos),
 `field_metrics.csv`, `plots/`, `animation.mp4` (cortes) y, para 02, 04 y la malla media,
 `animation_3d.mp4`.
+
+Los escenarios 06–09 usan **solo estadísticas agregadas** de registros reales de operación (medianas
+y percentiles); los archivos originales (con coordenadas, números de serie y fallas) no están en este
+repositorio (`docs/ESCENARIOS.md`).
 
 ## Obtener el código
 

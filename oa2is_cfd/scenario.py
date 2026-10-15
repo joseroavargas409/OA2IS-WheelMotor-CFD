@@ -65,6 +65,9 @@ class Scenario:
     mechanisms: str = 'moving'                 # 'moving' or 'stopped' (comparison case)
     mesh: str = 'coarse'
     initial_level: str = 'flat'                # flat free surface normal to g_eff(0)
+    oil_level_y_flat: float | None = None      # if set: inventory = fluid volume below this height (level ground, rest)
+    rotating_sensors: list = field(default_factory=list)   # sensors fixed to a rotating part (e.g. hub-cover plugs)
+    capacitive_stencil: bool = False           # record the 9-point electrode volume of every sensor (oil_sensor.py)
 
     @staticmethod
     def load(path):

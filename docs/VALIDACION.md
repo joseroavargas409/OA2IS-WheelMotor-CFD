@@ -177,7 +177,53 @@ Lo que leen los sensores (fracción del tiempo entre 0,05 y 0,554 s; `oil_sensor
 Ninguno quedó «no disponible»: los volúmenes sensibles de V1–V12 no fueron cubiertos por un
 engranaje en esta corrida.
 
-## 10. Limitaciones
+## 10. Escenarios del ciclo real con sensores en los tapones (06–09)
+
+Escenarios calibrados con datos reales de operación (`docs/ESCENARIOS.md`): rpm medida
+(48,43 rpm/km/h), aceite al nivel de los tapones de la tapa de maza (94,5 L en el modelo), aire a
+0,844 kg/m³ y 28 sensores capacitivos (S1–S8, V1–V12 y P1–P8 en los tapones, que giran con la maza).
+Malla ib_test; números de `tools/compare_real.py` → `results/validation/real_cycle_summary.csv`
+y `real_cycle.png` (promedios entre 0,15 s y el final).
+
+| | 06 reposo | 07 acarreo | 08 subida cargado | 09 bajada retardo |
+|---|---|---|---|---|
+| entrada | 0 km/h, plano | 14,07 km/h, +1,6 % | 10,27 km/h, +7,8 % | 20,47 km/h, −6 %, −0,5 m/s² |
+| motor | 0 rpm | 681 rpm | 497 rpm | 991 → 965 rpm |
+| t simulado / pasos | 0,15 s / 87 | 0,35 s / 1 782 | 0,35 s / 1 187 | 0,35 s / 2 777 |
+| cálculo | 2 min (1 núcleo) | 52 min (1) | 33 min (1) | 56 min (1, luego 2 desde 0,125 s) |
+| Co máx / p95 | 0,24 / 0,24 | 2,31 / 1,03 | 1,42 / 1,05 | 1,77 / 1,02 |
+| deriva máx. del aceite | 4 × 10⁻⁶ % | 9 × 10⁻⁵ % | 4 × 10⁻⁵ % | 2,6 × 10⁻⁴ % |
+| velocidad media del aceite | 0,007 m/s | 0,60 m/s | 0,46 m/s | 0,82 m/s |
+| aceite sobre el eje | 0 % | 5,4 % | 3,6 % | 7,1 % |
+| fracción mojada engranajes (alta / baja) | 0,18 (0,18 / 0,19) | 0,16 (0,09 / 0,22) | 0,17 (0,12 / 0,22) | 0,16 (0,08 / 0,23) |
+| inclinación del pozo de aceite (+ adelante) | +2,0° | −5,8° | −8,3° | −0,9° |
+| nivel inferido por el anillo de tapones | −0,230 m | −0,234 m | −0,233 m | −0,238 m |
+
+Lectura:
+* **Velocidad**: el aceite levantado sobre el eje y su velocidad crecen con la velocidad del camión
+  (08 < 07 < 09); la etapa alta se moja menos al girar más rápido (el aceite es expulsado hacia la
+  corona), la baja casi no cambia.
+* **Pendiente y retardo**: el arrastre de los engranajes inclina el pozo hacia atrás (07: −7,8°
+  respecto del reposo); en 08 la subida suma −4,5° (−10,4° en total); en 09 la bajada (+3,4°) y la
+  desaceleración (+2,9° cuasi-estático) lo compensan casi por completo.
+* **Inventario**: conservado (deriva ≤ 2,6 × 10⁻⁴ %), también al pasar 09 de 1 a 2 procesos.
+* **Sensores en los tapones**: en reposo P6 y P7 (240°/300°) quedan justo en la superficie libre
+  («mixto», fracción de aceite 0,61–0,62), que es la condición de nivel correcto de la guía; los
+  demás tapones están secos. Con la maza girando, cada tapón barre el círculo: P7 baja hacia el pozo
+  (mojado 54–99 % del tiempo, el resto mixto), P6 sube y se seca (mojado/mixto 33 % en 07, 54 % en 08, 0 % en 09, donde
+  la maza gira más rápido) y P8 entra al pozo al final de 09. Un tapón solo indica si está bajo el
+  nivel en ese instante; el nivel se recupera del arco mojado que ve en una vuelta de la rueda.
+* **Nivel desde los tapones**: el arco mojado del círculo de tapones (57–63°) da el nivel con
+  ±4 mm (resolución del anillo de 3°) en los cuatro escenarios: el aceite del bolsillo de la tapa
+  (24 L) casi no es perturbado a estas velocidades de maza (15–30 rpm). Una vuelta de rueda tarda
+  2–4 s, más que lo simulado (0,35 s); el anillo fijo de 120 posiciones da lo que vería un tapón
+  en cualquier ángulo sin simular la vuelta completa.
+* **No disponible**: ningún sensor quedó dentro de un sólido.
+
+Videos con todos los sensores y un panel en la tapa de maza: `results/0[6-9]_real_*/animation_sensores.mp4`;
+3D del acarreo típico: `results/07_real_acarreo/animation_3d.mp4`.
+
+## 11. Limitaciones
 
 1. **Resolución del engrane**: 1,5–2 celdas por diente (ib_test/ib_mid). El arrastre global del aceite
    está convergido (§5), el flujo dentro del engrane no. Velocidades locales de hasta 30–150 m/s en el
@@ -188,8 +234,12 @@ engranaje en esta corrida.
    bolsillo de la tapa no alcanzan régimen periódico.
 4. **Geometría aproximada** (modelo reconstruido, no CAD OEM) y sin pasajes de lubricación;
    rodamientos y sellos simplificados (`docs/GEOMETRIA.md`).
-5. **Laminar**, sin modelo de turbulencia ni de cavitación/aireación; temperatura uniforme (60 °C).
+5. **Laminar**, sin modelo de turbulencia ni de cavitación/aireación; temperatura uniforme (60 °C):
+   los datos reales no traen temperatura del aceite del motor-rueda.
 6. **Corridas en serie** de 1 núcleo: el paralelo funciona (`tools/run_case.sh <caso> N`), pero el
    desplazamiento de aceite no cruza fronteras de procesador (sigue siendo conservativo).
 7. El costo lo domina la ecuación de presión (acelerar el cálculo de χ redujo el tiempo por paso
    solo ~6 %). A velocidad máxima del camión (2 840 rpm) el Δt baja ~3×.
+8. **Datos reales**: el camión registrado lleva un 5GDY106B y las guías describen el GDY108C; la
+   geometría del modelo no es la de ninguno de los dos en detalle. El círculo de tapones (r = 0,270 m)
+   se midió en fotografías, con incertidumbre de algunos milímetros a centímetros.

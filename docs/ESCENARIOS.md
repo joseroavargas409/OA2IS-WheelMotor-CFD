@@ -19,6 +19,47 @@ no se usa en las estadísticas.
 | `04_transitorio` | 20 km/h; +1,5 m/s² entre 0,08–0,15 s; −3,0 m/s² entre 0,15–0,40 s | 887 → 904 → 784 rpm (de v(t)) | g − a(t) | 0,40 s |
 | `05_bajo_inventario` | como 02 con 55 L | 887 rpm | g | 0,25 s |
 
+## Escenarios del ciclo real (06–09)
+
+Calibrados con datos reales de operación de la mina (carpeta `hack` del Hackathon; ver «Uso de los
+datos reales» más abajo):
+
+| Escenario | Entrada (dato real) | Motor | Cargas | Duración |
+|---|---|---|---|---|
+| `06_real_reposo_nivel` | detenido en plano; aceite justo en los tapones de nivel | 0 rpm | g | 0,15 s |
+| `07_real_acarreo` | 14,07 km/h (mediana en movimiento), pendiente +1,6 % (mediana) | 681 rpm | g girada 0,92° | 0,35 s |
+| `08_real_subida_cargado` | cargado (> 100 t) en subida > 5 %: 10,27 km/h y +7,8 % (medianas) | 497 rpm | g girada 4,46° | 0,35 s |
+| `09_real_bajada_retardo` | bajada con retardo eléctrico: 20,47 km/h, −6,0 % (medianas); −0,5 m/s² (cuartil 25 %) desde 0,05 s | 991 → 965 rpm (de v(t)) | g girada −3,43° y − a(t) | 0,35 s |
+
+Cambios respecto de 01–05 (que se conservan tal cual, con sus resultados):
+
+1. **Velocidad → rpm medida**: 48,43 rpm de motor por km/h (mediana; p10 45,7, p90 50,4), en lugar
+   del radio supuesto de 1,95 m. Con la razón 32,6 del modelo equivale a un radio de rodadura de 1,79 m.
+2. **Nivel de aceite por los tapones**: la guía de Komatsu controla el nivel con el camión detenido
+   en plano y dos tapones magnéticos de la tapa de maza alineados horizontalmente; el aceite debe
+   llegar a ellos (máximo 90 L, GDY108C). De las fotografías de la guía: 8 tapones en un círculo de
+   r ≈ 0,270 m (0,479 × círculo de pernos de la tapa, ≈ 0,565 m) a 30, 60, 120, 150, 210, 240, 300 y
+   330°; el par de nivel está a 240° y 300° → nivel y = −0,234 m. El inventario se calcula sobre la
+   malla como el fluido bajo ese nivel: **94,5 L** en el modelo (5 % sobre los 90 L de la guía; la
+   cavidad del modelo es una simplificación de la real). Con pendiente, ese volumen se pone con la
+   superficie libre normal a la gravedad efectiva.
+3. **Aire a la altitud de la faena**: 81 kPa medidos (11,7 psi) → 0,844 kg/m³ a 60 °C.
+4. **Sensores en los puertos reales** (`rotating_sensors`): un sensor capacitivo en cada uno de los 8
+   tapones P1–P8, 15 mm dentro de la cara interior de la tapa (z = −1,7195 m), electrodo a lo largo
+   del eje de la rueda; **giran con la maza** (ver `docs/SENSORES.md`). Se mantienen S1–S8 y V1–V12.
+
+El aceite sigue a 60 °C (264 cSt): los datos no traen temperatura de aceite del motor-rueda (la del
+estator tiene mediana 64 °C, p95 87 °C) y del aceite solo se conoce la viscosidad a 60 °C.
+
+### Uso de los datos reales
+
+Los archivos de la carpeta `hack` (registros del camión 58, 930E-5 con motor-rueda 5GDY106B, y las
+guías de Komatsu del GDY108C) contienen información operacional (coordenadas, números de serie,
+fallas). **No se suben al repositorio**: solo se usaron estadísticas agregadas (medianas y
+percentiles de 63 720 tramas de 531 paquetes de datos), que son las que aparecen aquí. Las guías
+describen el GDY108C (razón 35,03:1); el camión registrado lleva un 5GDY106B, por eso la relación
+rpm/velocidad se toma medida y no de la razón nominal.
+
 Comparación «mecanismos detenidos vs en movimiento»: `01_reposo` frente a `02_operacion_normal`
 (mismo aceite, misma malla).
 
